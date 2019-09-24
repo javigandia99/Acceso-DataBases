@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-09-2019 a las 13:11:19
+-- Tiempo de generación: 24-09-2019 a las 20:48:40
 -- Versión del servidor: 10.4.6-MariaDB
 -- Versión de PHP: 7.3.9
 
@@ -39,10 +39,18 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `description`) VALUES
-('javi', 1234, 'primer usuario'),
-('velazquez', 87654, 'hola segundo usurario 2'),
-('javi', 1234, 'tercer usuario 3'),
-('jorge', 34, 'cuarto usuario 4');
+('javi99', 1234, 'admin user'),
+('martuu_008', 54321, 'segundo user');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`username`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
