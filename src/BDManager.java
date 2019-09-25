@@ -40,7 +40,7 @@ public class BDManager implements AcessoBaseDatos {
 		String driver = "com.mysql.cj.jdbc.Driver";
 		try {
 			Class.forName(driver);
-			System.out.println("Conectando...");
+			System.out.println("Conectando a base de datos: " +url + "...");
 			conexione = DriverManager.getConnection(url, user, pass);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
@@ -91,11 +91,12 @@ public class BDManager implements AcessoBaseDatos {
 			System.out.println("Query ejecutada correctamente");
 			while (rs.next()) {
 				contador++;
-				myusername = rs.getString(0);
-				mypassword = rs.getInt(1);
-				mydescription = rs.getString(2);
-				System.out.println(rs.getString(0)+""+rs.getInt(1)+" "+rs.getString(2));
+				myusername = rs.getString(1);
+				mypassword = rs.getInt(2);
+				mydescription = rs.getString(3);
+				System.out.println("Username: " +rs.getString(1)+" Password: "+rs.getInt(2)+" Description: "+rs.getString(3));
 				usu = new Usuarios(myusername, mypassword, mydescription);
+	
 				listadobd.put(contador, usu);
 			}
 
@@ -112,15 +113,18 @@ public class BDManager implements AcessoBaseDatos {
 		try {
 
 			sc = new Scanner(System.in);
+			System.out.println("introducce un username: ");
 			myusername = sc.nextLine();
+			System.out.println("introducce una password: ");
 			mypassword = sc.nextInt();
 			sc.nextLine();
+			System.out.println("introducce una description: ");
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {
 
 				System.out.println("Insertando...");
-				String query2 = "insert into user (username,password,description) value (\"myusername\",\"mypassword\",\"mydescription\")";
+				String query2 = "insert into user (username, password, description) value (\"myusername\",\"mypassword\",\"mydescription\")";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
 				System.out.println("Insert correcto!");
@@ -144,7 +148,7 @@ public class BDManager implements AcessoBaseDatos {
 				System.out.println("No existe el usuario escrito");
 			} else {
 				System.out.println("Borrando...");
-				String query = "DELETE FROM user WHERE username LIKE (\"myusername\")";
+				String query = "DELETE FROM user WHERE username LIKE ('"+myusername+"')";
 				PreparedStatement stmt = conexione.prepareStatement(query);
 				stmt.setString(1, myusername);
 				stmt.executeUpdate();
@@ -158,7 +162,7 @@ public class BDManager implements AcessoBaseDatos {
 	}
 
 	public boolean notexistUser(String user) throws SQLException {
-		String query = "SELECT username FROM user WHERE usr LIKE ?";
+		String query = "SELECT username FROM user WHERE username LIKE ?";
 		PreparedStatement stmt = conexione.prepareStatement(query);
 		stmt.setString(1, user);
 		ResultSet rset = stmt.executeQuery();

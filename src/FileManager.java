@@ -12,12 +12,7 @@ public class FileManager implements AcessoBaseDatos {
 	public FileManager() {
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public void conexion() {
-		// TODO Auto-generated method stub
-	}
-
+	
 	@Override
 	public HashMap<Integer, Usuarios> leer() {
 		// crea el flujo para leer desde el archivo
@@ -63,7 +58,7 @@ public class FileManager implements AcessoBaseDatos {
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
-		}
+		}sc.close();
 	}
 
 	@Override

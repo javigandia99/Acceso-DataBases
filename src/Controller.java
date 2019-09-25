@@ -12,33 +12,23 @@ public class Controller {
 
 	public void mostrar(HashMap<Integer, Usuarios> list) {
 		Integer clave;
-		Iterator<Integer> productos = list.keySet().iterator();
+		Iterator<Integer> iter = list.keySet().iterator();
 		System.out.println("Hay los siguientes productos:");
-		while (productos.hasNext()) {
-			clave = productos.next();
+		while (iter.hasNext()) {
+			clave = iter.next();
 			System.out.println(clave + " - " + list.get(clave));
 		}
 	}
 
 	public void menu() {
 		Scanner sc = new Scanner(System.in);
-
-		System.out.println("1: Leer datos de la BBDD\n");
-		System.out.println("2: Agregar campo a la BBDD\n");
-		System.out.println("3: Eliminar campo de la BBDD\n");
-		System.out.println("");
-		
-		System.out.println("4: Leer datos de fichero\n");
-		System.out.println("5: Agregar campos al fichero\n");
-		System.out.println("6: Eliminar campo del Fichero\n");
-		System.out.println("");
-		
-		System.out.println("7: Intercambiar de Fichero a BBDD\n ");
-		System.out.println("8: Intercambiar de BBDD a Fichero\n");
-		System.out.println("0: FIN\n");
+		System.out.println("1: Leer datos de la BBDD\n" + "2: Agregar campo a la BBDD\n"
+				+ "3: Eliminar campo de la BBDD\n" + "4: Leer datos de fichero\n" + "5: Agregar campos al fichero\n"
+				+ "6: Eliminar campo del Fichero\n" + "7: Intercambiar de Fichero a BBDD\n "
+				+ "8: Intercambiar de BBDD a Fichero\n" + "0: FIN\n");
 
 		int vmenu = sc.nextInt();
-		while (vmenu != 0 || vmenu <= 9 || vmenu >= -1) {
+		do {
 			switch (vmenu) {
 
 			case 1:
@@ -50,10 +40,13 @@ public class Controller {
 			case 2:
 				System.out.println("Opción: 2");
 				bd.insert();
+				mostrar(listbd);
+				break;
 
 			case 3:
 				System.out.println("Opción: 3");
 				bd.delete();
+				mostrar(listbd);
 				break;
 
 			case 4:
@@ -65,11 +58,13 @@ public class Controller {
 			case 5:
 				System.out.println("Opción: 5");
 				file.insert();
+				mostrar(listfile);
 				break;
 
 			case 6:
 				System.out.println("Opción: 6");
 				file.delete();
+				mostrar(listfile);
 				break;
 			case 7:
 				System.out.println("Opción: 7 ");
@@ -83,7 +78,9 @@ public class Controller {
 			default:
 				throw new IllegalArgumentException("Unexpected value: " + vmenu);
 			}
-		}
+			vmenu = sc.nextInt();
+		} while (vmenu != 0 || vmenu <= 9 || vmenu >= -1);
+		sc.close();
 
 	}
 }
