@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Controller {
@@ -11,15 +12,14 @@ public class Controller {
 	protected FileManager file = new FileManager();
 
 	public void mostrar(HashMap<Integer, Usuarios> list) {
-		Integer clave;
-		Iterator<Integer> iter = list.keySet().iterator();
-		System.out.println("Hay los siguientes productos:");
-		while (iter.hasNext()) {
-			clave = iter.next();
-			System.out.println(clave + " - " + list.get(clave));
-		}
+		Iterator it = list.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        System.out.println(pair.getKey() + " = " + pair.getValue().toString());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
 	}
-
+	
 	public void menu() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("1: Leer datos de la BBDD\n" + "2: Agregar campo a la BBDD\n"
@@ -79,7 +79,7 @@ public class Controller {
 				throw new IllegalArgumentException("Unexpected value: " + vmenu);
 			}
 			vmenu = sc.nextInt();
-		} while (vmenu != 0 || vmenu <= 9 || vmenu >= -1);
+		} while (vmenu != 0 && vmenu <= 9 && vmenu >= -1);
 		sc.close();
 
 	}

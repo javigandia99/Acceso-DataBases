@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -69,7 +70,14 @@ public class FileManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		// TODO Auto-generated method stub
+		try {
+			BufferedWriter in = new BufferedWriter(new FileWriter("fichero.txt"));
+			//vacio todo el fichero
+			in.write("");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
