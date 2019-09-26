@@ -1,10 +1,11 @@
 
+
 public class Usuarios {
 	protected String username;
-	protected  String password;
+	protected String password;
 	protected String description;
 
-	public Usuarios(String username,  String password, String description) {
+	public Usuarios(String username, String password, String description) {
 		this.username = username;
 		this.password = password;
 		this.description = description;
@@ -22,7 +23,7 @@ public class Usuarios {
 		return password;
 	}
 
-	public void setPassword( String password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -33,7 +34,8 @@ public class Usuarios {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	 public String toString() {
-	        return username + " " + password+ " "+ description;
-	    }
+
+	public String toString() {
+		return "Username: "+username +"\n" + "    Password: " + password+"\n" + "    Description: " + description+"\n";
+	}
 }

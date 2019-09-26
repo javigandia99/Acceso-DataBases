@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -80,7 +81,7 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public HashMap<Integer, Usuarios> leer() {
-		listadobd = new HashMap<Integer,Usuarios>();
+		listadobd = new HashMap<Integer, Usuarios>();
 		Usuarios usu;
 		int contador = 0;
 		try {
@@ -116,14 +117,15 @@ public class BDManager implements AcessoBaseDatos {
 			myusername = sc.nextLine();
 			System.out.println("introducce una password: ");
 			mypassword = sc.nextLine();
-			
+
 			System.out.println("introducce una description: ");
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {
 
 				System.out.println("Insertando...");
-				String query2 = "insert into user (username, password, description) value ("+myusername+","+mypassword+","+mydescription+")";
+				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"
+						+ mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
 				System.out.println("Insert correcto!");
@@ -142,6 +144,7 @@ public class BDManager implements AcessoBaseDatos {
 		try {
 
 			sc = new Scanner(System.in);
+			System.out.println("Introduce un username para borrar:");
 			myusername = sc.nextLine();
 			if (notexistUser(myusername)) {
 				System.out.println("No existe el usuario escrito");
@@ -149,8 +152,8 @@ public class BDManager implements AcessoBaseDatos {
 				System.out.println("Borrando...");
 				String query = "DELETE FROM user WHERE username LIKE ('" + myusername + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query);
-				stmt.setString(1, myusername);
 				stmt.executeUpdate();
+				System.out.println("Delete correcto!");
 				stmt.close();
 			}
 
@@ -177,7 +180,6 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		// TODO Auto-generated method stub
 
 	}
 }
