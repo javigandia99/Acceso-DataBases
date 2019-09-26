@@ -1,5 +1,8 @@
+package inferface;
 import java.sql.Connection;
 import java.util.HashMap;
+
+import Model.Usuarios;
 
 public interface AcessoBaseDatos {
 

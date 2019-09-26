@@ -1,3 +1,4 @@
+package Model;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+
+import inferface.AcessoBaseDatos;
+
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -85,7 +89,7 @@ public class BDManager implements AcessoBaseDatos {
 		Usuarios usu;
 		int contador = 0;
 		try {
-			System.out.println("Leyendo...BBDD");
+			System.out.println("Leyendo...");
 			String query = "SELECT * FROM user";
 			PreparedStatement stmt = conexione.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
@@ -113,12 +117,12 @@ public class BDManager implements AcessoBaseDatos {
 		try {
 
 			sc = new Scanner(System.in);
-			System.out.println("introducce un username: ");
+			System.out.println("introduce un username: ");
 			myusername = sc.nextLine();
-			System.out.println("introducce una password: ");
+			System.out.println("introduce una password: ");
 			mypassword = sc.nextLine();
 
-			System.out.println("introducce una description: ");
+			System.out.println("introduce una description: ");
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {

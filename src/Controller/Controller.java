@@ -1,7 +1,14 @@
+package Controller;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
+
+import Model.BDManager;
+import Model.FileManager;
+import Model.Usuarios;
 
 public class Controller {
 
@@ -12,7 +19,7 @@ public class Controller {
 	protected FileManager file = new FileManager();
 
 	public void mostrar(HashMap<Integer, Usuarios> list) {
-		Iterator it = list.entrySet().iterator();
+		Iterator<Entry<Integer, Usuarios>> it = list.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry pair = (Map.Entry) it.next();
 			System.out.println(pair.getKey() + " = " + pair.getValue().toString());
@@ -24,12 +31,12 @@ public class Controller {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("");
 		System.out.println("| 1: Leer datos de la BBDD\n" + "| 2: Agregar campo a la BBDD \n"
-				+ "| 3: Eliminar campo de la BBDD\n" + "| 4: Leer datos de fichero\n" + "| 5: Agregar campos al fichero \n"
-				+ "| 6: Eliminar campo del Fichero\n" + "| 7: Poner BBDD en fichero\n"
-				+ "| 8: Poner Fichero en BBDD \n" + "| 0: FIN\n");
+				+ "| 3: Eliminar campo de la BBDD\n" + "| 4: Leer datos de fichero\n"
+				+ "| 5: Agregar campos al fichero \n" + "| 6: Eliminar campo del Fichero\n"
+				+ "| 7: Poner BBDD en fichero\n" + "| 8: Poner Fichero en BBDD \n" + "| 0: FIN\n");
 
 		int vmenu = sc.nextInt();
-		do {
+		while (vmenu != 0 && vmenu <= 9 && vmenu >= -1) {
 			switch (vmenu) {
 
 			case 1:
@@ -75,18 +82,16 @@ public class Controller {
 				System.out.println("Opción: 8 ");
 				file.intercambiodatos();
 				break;
-
-			default:
-				throw new IllegalArgumentException("Unexpected value: " + vmenu);
 			}
 			System.out.println("");
 			System.out.println("BBDD:        | 1: Leer datos\n" + "             | 2: Agregar campo\n"
-					+ "             | 3: Eliminar campo\n" + "Fichero:     | 4: Leer datos\n" + "             | 5: Agregar campos\n"
-					+ "             | 6: Eliminar campo del Fichero\n" + "Intercambio: | 7: BBDD en fichero\n"
-					+ "             | 8: Fichero en BBDD \n" + "| 0: FIN | \n");
+					+ "             | 3: Eliminar campo\n" + "Fichero:     | 4: Leer datos\n"
+					+ "             | 5: Agregar campos\n" + "             | 6: Eliminar campo del Fichero\n"
+					+ "Intercambio: | 7: BBDD en fichero\n" + "             | 8: Fichero en BBDD \n" + "| 0: FIN | \n");
 			System.out.println("Introduce otro numero o pon 0 para finalizar");
 			vmenu = sc.nextInt();
-		} while (vmenu != 0 && vmenu <= 9 && vmenu >= -1);
+		}
+		System.out.println("PROGRAMA FINALIZADO");
 		sc.close();
 
 	}

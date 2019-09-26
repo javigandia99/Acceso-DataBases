@@ -1,3 +1,4 @@
+package Model;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Scanner;
+import inferface.AcessoBaseDatos;
 
 public class FileManager implements AcessoBaseDatos {
 	private Connection conexione;
@@ -93,6 +95,7 @@ public class FileManager implements AcessoBaseDatos {
 		try {
 			in = new BufferedReader(new FileReader("fichero.txt"));
 			String fichero;
+			System.out.println("Leyendo...");
 			while ((fichero = in.readLine()) != null) {
 				String[] partes = fichero.split(";");
 				contador++;
