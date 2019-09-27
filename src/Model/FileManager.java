@@ -121,25 +121,31 @@ public class FileManager implements AcessoBaseDatos {
 	public void insert() {
 		FileWriter fichero = null;
 		PrintWriter pw = null;
-		Scanner sc = new Scanner(System.in);
+
 		try {
+			Scanner sc = new Scanner(System.in);
 			fichero = new FileWriter("fichero.txt", true);
 			pw = new PrintWriter(fichero);
-			pw.println(sc.nextLine());
-
+			System.out.println("username:");
+			myusername = sc.nextLine();
+			System.out.println("password:");
+			mypassword = sc.nextLine();
+			System.out.println("description:");
+			mydescription = sc.nextLine();
+			String contenido = myusername + ";" + mypassword + ";" + mydescription + "\n";
+			pw.print(contenido);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				// Nuevamente aprovechamos el finally para
-				// asegurarnos que se cierra el fichero.
 				if (null != fichero)
 					fichero.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
 		}
-		sc.close();
+
 	}
 
 	@Override
@@ -155,21 +161,21 @@ public class FileManager implements AcessoBaseDatos {
 			String fichero;
 
 			while ((fichero = in.readLine()) != null) {
+				
 				String[] partes = fichero.split(";");
 				if (notexistUser(partes[0])) {
 					System.out.println("username repetido");
 				} else {
-					System.out.println(
-							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
+					System.out.println("Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
 
-					String query = "insert into user (username, password, description) value ('" + partes[0] + "','"
-							+ partes[1] + "','" + partes[2] + "')";
+					String query = "insert into user (username, password, description) value ('" + partes[0] + "','" + partes[1] + "','" + partes[2] + "')";
 					PreparedStatement stmt = conexione.prepareStatement(query);
 					stmt.executeUpdate(query);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("fichero vacio no hay nada que meter en la base de datos");
+			
 		}
 
 	}

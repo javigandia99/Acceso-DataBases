@@ -12,10 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
 import inferface.AcessoBaseDatos;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 public class BDManager implements AcessoBaseDatos {
@@ -184,8 +187,12 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		leer();
-		listadobd = new HashMap<Integer, Usuarios>();
-		System.out.println(listadobd);
+		HashMap<Integer, Usuarios> listado = leer();
+		Iterator<Entry<Integer, Usuarios>> it = listado.entrySet().iterator();
+		while (it.hasNext()) {
+			System.out.println(it.next().getValue());
+			
+		}
+		
 	}
 }

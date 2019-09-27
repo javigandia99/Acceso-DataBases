@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-09-2019 a las 20:48:40
+-- Tiempo de generación: 27-09-2019 a las 19:46:06
 -- Versión del servidor: 10.4.6-MariaDB
 -- Versión de PHP: 7.3.9
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bbdd`
+-- Base de datos: `db_users`
 --
 
 -- --------------------------------------------------------
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `user` (
   `username` varchar(25) COLLATE utf8_spanish_ci NOT NULL,
-  `password` int(22) NOT NULL,
+  `password` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
   `description` varchar(25) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
@@ -39,8 +39,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `description`) VALUES
-('javi99', 1234, 'admin user'),
-('martuu_008', 54321, 'segundo user');
+('3', 'w', 'w'),
+('hola34', '2345', 'gg'),
+('javi99', '1234', 'admin user'),
+('martuu_008', '54321', 'segundo user'),
+('nuevo1', '12345', 'nuevo4');
 
 --
 -- Índices para tablas volcadas

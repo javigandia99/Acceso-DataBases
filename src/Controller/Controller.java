@@ -72,7 +72,7 @@ public class Controller {
 			case 6:
 				System.out.println("Opción: 6\n");
 				file.delete();
-				//mostrar(listfile);
+				// mostrar(listfile);
 				break;
 			case 7:
 				System.out.println("Opción: 7\n");
@@ -87,7 +87,8 @@ public class Controller {
 			System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Agregar campo\n"
 					+ "||             | 3: Eliminar campo\n" + "||Fichero:     | 4: Leer datos\n"
 					+ "||             | 5: Agregar campos\n" + "||             | 6: Eliminar campo del Fichero\n"
-					+ "||Intercambio: | 7: BBDD en fichero\n" + "||             | 8: Fichero en BBDD \n" + "|| 0: FIN |");
+					+ "||Intercambio: | 7: BBDD en fichero\n" + "||             | 8: Fichero en BBDD \n"
+					+ "|| 0: FIN |");
 			System.out.println("---------------------------------------------");
 			System.out.println("Introduce otro numero o pon 0 para finalizar");
 			vmenu = sc.nextInt();
