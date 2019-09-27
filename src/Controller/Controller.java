@@ -40,54 +40,55 @@ public class Controller {
 			switch (vmenu) {
 
 			case 1:
-				System.out.println("Opción: 1");
+				System.out.println("Opción: 1\n");
 				listbd = bd.leer();
 				mostrar(listbd);
 				break;
 
 			case 2:
-				System.out.println("Opción: 2");
+				System.out.println("Opción: 2\n");
 				bd.insert();
 				mostrar(listbd);
 				break;
 
 			case 3:
-				System.out.println("Opción: 3");
+				System.out.println("Opción: 3\n");
 				bd.delete();
 				mostrar(listbd);
 				break;
 
 			case 4:
-				System.out.println("Opción: 4");
+				System.out.println("Opción: 4\n");
 				listfile = file.leer();
 				mostrar(listfile);
 				break;
 
 			case 5:
-				System.out.println("Opción: 5");
+				System.out.println("Opción: 5\n");
 				file.insert();
 				mostrar(listfile);
 				break;
 
 			case 6:
-				System.out.println("Opción: 6");
+				System.out.println("Opción: 6\n");
 				file.delete();
-				mostrar(listfile);
+				//mostrar(listfile);
 				break;
 			case 7:
-				System.out.println("Opción: 7 ");
+				System.out.println("Opción: 7\n");
 				bd.intercambiodatos();
 				break;
 			case 8:
-				System.out.println("Opción: 8 ");
+				System.out.println("Opción: 8\n");
 				file.intercambiodatos();
 				break;
 			}
-			System.out.println("");
-			System.out.println("BBDD:        | 1: Leer datos\n" + "             | 2: Agregar campo\n"
-					+ "             | 3: Eliminar campo\n" + "Fichero:     | 4: Leer datos\n"
-					+ "             | 5: Agregar campos\n" + "             | 6: Eliminar campo del Fichero\n"
-					+ "Intercambio: | 7: BBDD en fichero\n" + "             | 8: Fichero en BBDD \n" + "| 0: FIN | \n");
+			System.out.println("---------------------------------------------");
+			System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Agregar campo\n"
+					+ "||             | 3: Eliminar campo\n" + "||Fichero:     | 4: Leer datos\n"
+					+ "||             | 5: Agregar campos\n" + "||             | 6: Eliminar campo del Fichero\n"
+					+ "||Intercambio: | 7: BBDD en fichero\n" + "||             | 8: Fichero en BBDD \n" + "|| 0: FIN |");
+			System.out.println("---------------------------------------------");
 			System.out.println("Introduce otro numero o pon 0 para finalizar");
 			vmenu = sc.nextInt();
 		}

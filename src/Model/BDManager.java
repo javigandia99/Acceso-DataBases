@@ -184,6 +184,8 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-
+		leer();
+		listadobd = new HashMap<Integer, Usuarios>();
+		System.out.println(listadobd);
 	}
 }

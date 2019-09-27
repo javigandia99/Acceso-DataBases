@@ -144,7 +144,7 @@ public class FileManager implements AcessoBaseDatos {
 
 	@Override
 	public void delete() {
-
+		System.out.println("*Proximamente estara disponible*");
 	}
 
 	@Override
