@@ -7,7 +7,7 @@ import Model.Usuarios;
 public interface AcessoBaseDatos {
 
 	public Connection getConnection();
-
+	
 	public HashMap<Integer, Usuarios> leer();
 
 	public void insert();

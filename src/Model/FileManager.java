@@ -8,8 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,18 +15,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.Scanner;
 import inferface.AcessoBaseDatos;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class FileManager implements AcessoBaseDatos {
 	private Connection conexione;
+	private Scanner sc;
+	protected HashMap<Integer, Usuarios> listadofile;
 	private File config;
 	private Properties properties;
 	private InputStream input;
 	private OutputStream output;
-	protected HashMap<Integer, Usuarios> listadofile;
-	protected BDManager bd = new BDManager();
 	protected BufferedReader in;
 	private String myusername;
 	private String mypassword;
@@ -38,7 +38,7 @@ public class FileManager implements AcessoBaseDatos {
 		config = new File("src/configuracion.ini");
 		properties = new Properties();
 		output = null;
-
+		getConnection();
 	}
 
 	public Connection getConnection() {
@@ -48,7 +48,7 @@ public class FileManager implements AcessoBaseDatos {
 		String driver = "com.mysql.cj.jdbc.Driver";
 		try {
 			Class.forName(driver);
-			System.out.println("Conectando a base de datos: " + url + "...");
+			// System.out.println("Conectando a base de datos: " + url);
 			conexione = DriverManager.getConnection(url, user, pass);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
@@ -106,12 +106,10 @@ public class FileManager implements AcessoBaseDatos {
 				listadofile.put(contador, usu);
 			}
 
-			in.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("Error en lectura de Fichero");
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listadofile;
@@ -123,9 +121,10 @@ public class FileManager implements AcessoBaseDatos {
 		PrintWriter pw = null;
 
 		try {
-			Scanner sc = new Scanner(System.in);
+
 			fichero = new FileWriter("fichero.txt", true);
 			pw = new PrintWriter(fichero);
+			sc = new Scanner(System.in);
 			System.out.println("username:");
 			myusername = sc.nextLine();
 			System.out.println("password:");
@@ -134,7 +133,7 @@ public class FileManager implements AcessoBaseDatos {
 			mydescription = sc.nextLine();
 			String contenido = myusername + ";" + mypassword + ";" + mydescription + "\n";
 			pw.print(contenido);
-			
+			System.out.println("Insert correcto!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -150,49 +149,73 @@ public class FileManager implements AcessoBaseDatos {
 
 	@Override
 	public void delete() {
-		System.out.println("*Proximamente estara disponible*");
+		try {
+
+			sc = new Scanner(System.in);
+			System.out.println("Introduce un username para borrar:");
+			myusername = sc.nextLine();
+			if (existUser(myusername)) {
+				System.out.println("Borrando...");
+				System.out.println("Delete proximamente");
+			} else {
+				System.out.println("No existe el usuario escrito");
+			}
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
 	}
 
 	@Override
 	public void intercambiodatos() {
 
 		try {
-			getConnection();
-			String fichero;
 
-			while ((fichero = in.readLine()) != null) {
-				
-				String[] partes = fichero.split(";");
-				if (notexistUser(partes[0])) {
+			in = new BufferedReader(new FileReader("fichero.txt"));
+			String fich;
+			while ((fich = in.readLine()) != null) {
+
+				String[] partes = fich.split(";");
+				if (existUser(partes[0])) {
 					System.out.println("username repetido");
 				} else {
-					System.out.println("Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
+					System.out.println(
+							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
 
-					String query = "insert into user (username, password, description) value ('" + partes[0] + "','" + partes[1] + "','" + partes[2] + "')";
+					String query = "INSERT INTO user (username, password, description) value ('" + partes[0] + "','"
+							+ partes[1] + "','" + partes[2] + "')";
 					PreparedStatement stmt = conexione.prepareStatement(query);
 					stmt.executeUpdate(query);
 				}
 			}
+
 		} catch (Exception e) {
-			System.out.println("fichero vacio no hay nada que meter en la base de datos");
-			
+			e.printStackTrace();
 		}
 
 	}
 
-	public boolean notexistUser(String user) throws SQLException {
+	public boolean existUser(String user) {
 		String query = "SELECT username FROM user WHERE username LIKE ?";
-		PreparedStatement stmt = conexione.prepareStatement(query);
-		stmt.setString(1, user);
-		ResultSet rset = stmt.executeQuery();
-		boolean exist = rset.next();
-		rset.close();
-		stmt.close();
-		if (exist) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+		PreparedStatement stmt;
+		try {
+			stmt = conexione.prepareStatement(query);
+			stmt.setString(1, user);
+			ResultSet rset = stmt.executeQuery();
+			boolean exist = rset.next();
+			rset.close();
+			stmt.close();
 
+			if (exist) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
 }

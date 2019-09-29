@@ -18,7 +18,6 @@ import inferface.AcessoBaseDatos;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
 public class BDManager implements AcessoBaseDatos {
@@ -48,7 +47,7 @@ public class BDManager implements AcessoBaseDatos {
 		String driver = "com.mysql.cj.jdbc.Driver";
 		try {
 			Class.forName(driver);
-			System.out.println("Conectando a base de datos: " + url + "...");
+			System.out.println("Conectando a base de datos: " + url);
 			conexione = DriverManager.getConnection(url, user, pass);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
@@ -131,8 +130,7 @@ public class BDManager implements AcessoBaseDatos {
 			if (notexistUser(myusername)) {
 
 				System.out.println("Insertando...");
-				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"
-						+ mypassword + "','" + mydescription + "')";
+				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"+ mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
 				System.out.println("Insert correcto!");

@@ -1,2 +1,9 @@
 javi;5432;admin malito
 marisa;876543;usuario nulo
+rt;rt;rt
+t;t;t
+12;12;re
+u;u;u
+23er;23tr;23ws
+65y;65t;65rty;ty;ty
+jaime;rodriguez;montenegro
