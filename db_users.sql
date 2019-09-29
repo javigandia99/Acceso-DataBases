@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-09-2019 a las 19:46:06
--- Versión del servidor: 10.4.6-MariaDB
--- Versión de PHP: 7.3.9
+-- Tiempo de generación: 29-09-2019 a las 12:30:25
+-- Versión del servidor: 10.1.38-MariaDB
+-- Versión de PHP: 7.3.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -39,9 +39,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `description`) VALUES
-('3', 'w', 'w'),
-('hola34', '2345', 'gg'),
+('jaime', 'rodriguez', 'montenegro'),
+('javi', '5432', 'admin malito'),
 ('javi99', '1234', 'admin user'),
+('marisa', '876543', 'usuario nulo'),
 ('martuu_008', '54321', 'segundo user'),
 ('nuevo1', '12345', 'nuevo4');
 
