@@ -1,6 +1,5 @@
 package Model;
 
-
 public class Usuarios {
 	protected String username;
 	protected String password;
@@ -37,6 +36,11 @@ public class Usuarios {
 	}
 
 	public String toString() {
-		return "Username: "+username +"\n" + "    Password: " + password+"\n" + "    Description: " + description+"\n";
+		return "Username: " + username + "\n" + "    Password: " + password + "\n" + "    Description: " + description
+				+ "\n";
+	}
+
+	public String tofichero() {
+		return username + ";" + password + ";" + description;
 	}
 }

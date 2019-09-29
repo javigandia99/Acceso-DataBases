@@ -3,9 +3,11 @@ package Model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -130,7 +132,8 @@ public class BDManager implements AcessoBaseDatos {
 			if (notexistUser(myusername)) {
 
 				System.out.println("Insertando...");
-				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"+ mypassword + "','" + mydescription + "')";
+				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"
+						+ mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
 				System.out.println("Insert correcto!");
@@ -185,12 +188,21 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		HashMap<Integer, Usuarios> listado = leer();
-		Iterator<Entry<Integer, Usuarios>> it = listado.entrySet().iterator();
-		while (it.hasNext()) {
-			System.out.println(it.next().getValue());
-			
+		FileWriter fichero = null;
+		PrintWriter pw = null;
+		try {
+			fichero = new FileWriter("fichero.txt", true);
+
+			pw = new PrintWriter(fichero);
+			HashMap<Integer, Usuarios> listado = leer();
+			Iterator<Entry<Integer, Usuarios>> it = listado.entrySet().iterator();
+			while (it.hasNext()) {
+				String contenido = it.next().getValue().tofichero();
+				pw.print(contenido);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
+
 	}
 }
