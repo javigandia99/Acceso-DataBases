@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FileManager implements AcessoBaseDatos {
+
 	private Connection conexione;
 	private Scanner sc;
 	protected HashMap<Integer, Usuarios> listadofile;
@@ -148,7 +149,13 @@ public class FileManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void delete() {
+	public void update() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteuno() {
 		try {
 
 			sc = new Scanner(System.in);
@@ -163,6 +170,22 @@ public class FileManager implements AcessoBaseDatos {
 
 		} catch (Exception e) {
 			System.out.println(e);
+		}
+
+	}
+
+	@Override
+	public void deleteall() {
+		FileWriter fichero = null;
+		PrintWriter pw = new PrintWriter(fichero);
+
+		System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
+		System.out.println("No habra vuelta atras...");
+		String opcion = sc.nextLine();
+		if (opcion == "si") {
+			pw.write("");
+		} else {
+			System.out.println("NO HA BORRADO NADA");
 		}
 
 	}
@@ -218,4 +241,5 @@ public class FileManager implements AcessoBaseDatos {
 		return false;
 
 	}
+
 }

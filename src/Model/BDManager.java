@@ -148,7 +148,64 @@ public class BDManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void delete() {
+	public void update() {
+		try {
+
+			sc = new Scanner(System.in);
+			System.out.println("introduce un username: ");
+			myusername = sc.nextLine();
+			// vamos a modificar un registro
+			if (notexistUser(myusername)) {
+				System.out.println("Introduce que quieres modificar: todo   password    description");
+				String posibilidad = sc.nextLine();
+				String query2 = null;
+				String nuevopassword = null;
+				String nuevodescription = null;
+				switch (posibilidad) {
+				case "todo":
+					System.out.println("El username NUNCA se va a poder Modificar");
+					System.out.println("Nuevo password:");
+					nuevopassword = sc.nextLine();
+					System.out.println("Nueva description:");
+					nuevodescription = sc.nextLine();
+					System.out.println("Modificando...");
+
+					query2 = "UPDATE user set password =  '" + nuevopassword + "', description =  '" + nuevodescription
+							+ "' WHERE username = '" + myusername + "'";
+					break;
+
+				case "password":
+
+					System.out.println("Nuevo password:");
+					nuevopassword = sc.nextLine();
+					System.out.println("Modificando...");
+					query2 = "UPDATE user set password =  '" + nuevopassword + "' WHERE username = '" + myusername+ "'";
+					break;
+
+				case "description":
+					System.out.println("Nueva description:");
+					nuevodescription = sc.nextLine();
+					System.out.println("Modificando...");
+					query2 = "UPDATE user set description =  '" + nuevodescription + "' WHERE username = '" + myusername+ "'";
+					break;
+				}
+
+				PreparedStatement stmt = conexione.prepareStatement(query2);
+				stmt.executeUpdate(query2);
+				System.out.println("Update correcto!");
+
+			} else {
+				System.out.println("USERNAME NO EXISTE");
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	@Override
+	public void deleteuno() {
 		try {
 
 			sc = new Scanner(System.in);
@@ -167,6 +224,19 @@ public class BDManager implements AcessoBaseDatos {
 
 		} catch (Exception e) {
 			System.out.println(e);
+		}
+
+	}
+
+	@Override
+	public void deleteall() {
+		System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
+		System.out.println("No habra vuelta atras...");
+		String opcion = sc.nextLine();
+		if (opcion == "si") {
+			System.out.println("Delete ALL correcto!");
+		} else {
+			System.out.println("NO HA BORRADO NADA");
 		}
 
 	}
@@ -205,4 +275,5 @@ public class BDManager implements AcessoBaseDatos {
 		}
 
 	}
+
 }

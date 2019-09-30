@@ -34,10 +34,20 @@ public class Controller {
 		System.out.println("");
 		System.out.println("_______________________________________________");
 		System.out.println("____________________MENU:______________________\n");
-		System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Agregar campo\n"
-				+ "||             | 3: Eliminar campo\n" + "||Fichero:     | 4: Leer datos\n"
-				+ "||             | 5: Agregar campos\n" + "||             | 6: Eliminar campo del Fichero\n"
-				+ "||Intercambio: | 7: BBDD en fichero\n" + "||             | 8: Fichero en BBDD \n"
+		System.out.println("||BBDD:        | 1: Leer datos\n" 
+				+ "||             | 2: Agregar campo\n" 
+				+ "||             | 3: Actualizar campo\n"
+				+ "||             | 4: Eliminar un campo\n" 
+				+ "||             | 5: Eliminar todo\n"
+				+ "||             |\n"
+				+ "||Fichero:     | 6: Leer datos\n"
+				+ "||             | 7: Agregar campos\n" 
+				+ "||             | 8: Actualizar campos\n"
+				+ "||             | 9: Eliminar un campo\n"  
+				+ "||             | 10: Eliminar todo\n"
+				+ "||             |\n"
+				+ "||Intercambio: | 11: BBDD en fichero\n" 
+				+ "||             | 12: Fichero en BBDD \n"
 				+ "|| 0: FIN      |");
 		System.out.println("_______________________________________________\n");
 
@@ -58,40 +68,67 @@ public class Controller {
 
 			case 3:
 				System.out.println("Opción: 3\n");
-				bd.delete();
-				mostrar(listbd);
+				bd.update();
+				break;
+			case 4:
+				System.out.println("Opción: 3\n");
+				bd.deleteuno();
+				break;
+			case 5:
+				System.out.println("Opción: 3\n");
+				bd.deleteall();
 				break;
 
-			case 4:
+			case 6:
 				System.out.println("Opción: 4\n");
 				listfile = file.leer();
 				mostrar(listfile);
 				break;
 
-			case 5:
+			case 7:
 				System.out.println("Opción: 5\n");
 				file.insert();
 				break;
-
-			case 6:
-				System.out.println("Opción: 6\n");
-				file.delete();
-				// mostrar(listfile);
+			case 8:
+				System.out.println("Opción: 5\n");
+				file.update();
 				break;
-			case 7:
+
+			case 9:
+				System.out.println("Opción: 6\n");
+				file.deleteuno();
+				break;
+			case 10:
+				System.out.println("Opción: 6\n");
+				file.deleteall();
+				break;
+			case 11:
 				System.out.println("Opción: 7\n");
 				bd.intercambiodatos();
 				break;
-			case 8:
+			case 12:
 				System.out.println("Opción: 8\n");
 				file.intercambiodatos();
 				break;
 			}
-			System.out.println("_______________________________________________\n");
-			System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Agregar campo\n"
-					+ "||             | 3: Eliminar campo\n" + "||Fichero:     | 4: Leer datos\n"
-					+ "||             | 5: Agregar campos\n" + "||             | 6: Eliminar campo del Fichero\n"
-					+ "||Intercambio: | 7: BBDD en fichero\n" + "||             | 8: Fichero en BBDD \n"
+			System.out.println("");
+			System.out.println("_______________________________________________");
+			System.out.println("_______________________________________________");
+			System.out.println("____________________MENU:______________________\n");
+			System.out.println("||BBDD:        | 1: Leer datos\n" 
+					+ "||             | 2: Agregar campo\n" 
+					+ "||             | 3: Actualizar campo\n"
+					+ "||             | 4: Eliminar un campo\n" 
+					+ "||             | 5: Eliminar todo\n"
+					+ "||             |\n"
+					+ "||Fichero:     | 6: Leer datos\n"
+					+ "||             | 7: Agregar campos\n" 
+					+ "||             | 8: Actualizar campos\n"
+					+ "||             | 9: Eliminar un campo\n"  
+					+ "||             | 10: Eliminar todo\n"
+					+ "||             |\n"
+					+ "||Intercambio: | 11: BBDD en fichero\n" 
+					+ "||             | 12: Fichero en BBDD \n"
 					+ "|| 0: FIN      |");
 			System.out.println("_______________________________________________\n");
 			System.out.println("Introduce otro numero o pon 0 para finalizar");
