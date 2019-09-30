@@ -117,6 +117,11 @@ public class BDManager implements AcessoBaseDatos {
 	}
 
 	@Override
+	public void filtrar() {
+
+	}
+
+	@Override
 	public void insert() {
 		try {
 
@@ -156,6 +161,10 @@ public class BDManager implements AcessoBaseDatos {
 			myusername = sc.nextLine();
 			// vamos a modificar un registro
 			if (notexistUser(myusername)) {
+				System.out.println("USERNAME NO EXISTE");
+
+			} else {
+
 				System.out.println("Introduce que quieres modificar: todo   password    description");
 				String posibilidad = sc.nextLine();
 				String query2 = null;
@@ -179,23 +188,22 @@ public class BDManager implements AcessoBaseDatos {
 					System.out.println("Nuevo password:");
 					nuevopassword = sc.nextLine();
 					System.out.println("Modificando...");
-					query2 = "UPDATE user set password =  '" + nuevopassword + "' WHERE username = '" + myusername+ "'";
+					query2 = "UPDATE user set password =  '" + nuevopassword + "' WHERE username = '" + myusername
+							+ "'";
 					break;
 
 				case "description":
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
 					System.out.println("Modificando...");
-					query2 = "UPDATE user set description =  '" + nuevodescription + "' WHERE username = '" + myusername+ "'";
+					query2 = "UPDATE user set description =  '" + nuevodescription + "' WHERE username = '" + myusername
+							+ "'";
 					break;
 				}
 
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
 				System.out.println("Update correcto!");
-
-			} else {
-				System.out.println("USERNAME NO EXISTE");
 			}
 
 		} catch (SQLException e) {
@@ -235,6 +243,16 @@ public class BDManager implements AcessoBaseDatos {
 		String opcion = sc.nextLine();
 		if (opcion == "si") {
 			System.out.println("Delete ALL correcto!");
+			String query = "TRUNCATE user";
+			PreparedStatement stmt;
+			try {
+				stmt = conexione.prepareStatement(query);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				System.err.println("Fallo en ejecutar delete all");
+				e.printStackTrace();
+			}
+			
 		} else {
 			System.out.println("NO HA BORRADO NADA");
 		}
@@ -258,6 +276,7 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
+		//DE BASE DE DATOS A FICHERO
 		FileWriter fichero = null;
 		PrintWriter pw = null;
 		try {

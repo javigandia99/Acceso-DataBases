@@ -31,7 +31,6 @@ public class Controller {
 
 	public void menu() {
 		Scanner sc = new Scanner(System.in);
-		System.out.println("");
 		System.out.println("_______________________________________________");
 		System.out.println("____________________MENU:______________________\n");
 		System.out.println("||BBDD:        | 1: Leer datos\n" 
@@ -70,44 +69,50 @@ public class Controller {
 				System.out.println("Opción: 3\n");
 				bd.update();
 				break;
+				
 			case 4:
-				System.out.println("Opción: 3\n");
+				System.out.println("Opción: 4\n");
 				bd.deleteuno();
 				break;
+				
 			case 5:
-				System.out.println("Opción: 3\n");
+				System.out.println("Opción: 5\n");
 				bd.deleteall();
 				break;
 
 			case 6:
-				System.out.println("Opción: 4\n");
+				System.out.println("Opción: 6\n");
 				listfile = file.leer();
 				mostrar(listfile);
 				break;
 
 			case 7:
-				System.out.println("Opción: 5\n");
+				System.out.println("Opción: 7\n");
 				file.insert();
 				break;
+				
 			case 8:
-				System.out.println("Opción: 5\n");
+				System.out.println("Opción: 8\n");
 				file.update();
 				break;
 
 			case 9:
-				System.out.println("Opción: 6\n");
+				System.out.println("Opción: 9\n");
 				file.deleteuno();
 				break;
+				
 			case 10:
-				System.out.println("Opción: 6\n");
+				System.out.println("Opción: 10\n");
 				file.deleteall();
 				break;
+				
 			case 11:
-				System.out.println("Opción: 7\n");
+				System.out.println("Opción: 11\n");
 				bd.intercambiodatos();
 				break;
+				
 			case 12:
-				System.out.println("Opción: 8\n");
+				System.out.println("Opción: 12\n");
 				file.intercambiodatos();
 				break;
 			}

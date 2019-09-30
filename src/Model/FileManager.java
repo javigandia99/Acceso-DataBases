@@ -117,6 +117,11 @@ public class FileManager implements AcessoBaseDatos {
 	}
 
 	@Override
+	public void filtrar() {
+
+	}
+
+	@Override
 	public void insert() {
 		FileWriter fichero = null;
 		PrintWriter pw = null;
@@ -184,6 +189,7 @@ public class FileManager implements AcessoBaseDatos {
 		String opcion = sc.nextLine();
 		if (opcion == "si") {
 			pw.write("");
+			System.out.println("Todo el fichero ha sido borrado");
 		} else {
 			System.out.println("NO HA BORRADO NADA");
 		}
@@ -192,7 +198,7 @@ public class FileManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-
+	//DE FICHERO A BASE DE DATOS
 		try {
 
 			in = new BufferedReader(new FileReader("fichero.txt"));
