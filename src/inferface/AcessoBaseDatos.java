@@ -11,8 +11,6 @@ public interface AcessoBaseDatos {
 	
 	public HashMap<Integer, Usuarios> leer();
 	
-	public void filtrar();
-	
 	public void insert();
 
 	public void update();

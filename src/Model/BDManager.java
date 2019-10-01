@@ -116,15 +116,10 @@ public class BDManager implements AcessoBaseDatos {
 
 	}
 
-	@Override
-	public void filtrar() {
-
-	}
 
 	@Override
 	public void insert() {
 		try {
-
 			sc = new Scanner(System.in);
 			System.out.println("introduce un username: ");
 			myusername = sc.nextLine();
@@ -147,7 +142,7 @@ public class BDManager implements AcessoBaseDatos {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			e.getMessage();
 		}
 
 	}
@@ -252,7 +247,7 @@ public class BDManager implements AcessoBaseDatos {
 				System.err.println("Fallo en ejecutar delete all");
 				e.printStackTrace();
 			}
-			
+
 		} else {
 			System.out.println("NO HA BORRADO NADA");
 		}
@@ -276,7 +271,7 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		//DE BASE DE DATOS A FICHERO
+		// DE BASE DE DATOS A FICHERO
 		FileWriter fichero = null;
 		PrintWriter pw = null;
 		try {

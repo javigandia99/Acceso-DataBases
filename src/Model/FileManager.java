@@ -117,11 +117,6 @@ public class FileManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void filtrar() {
-
-	}
-
-	@Override
 	public void insert() {
 		FileWriter fichero = null;
 		PrintWriter pw = null;
@@ -155,7 +150,7 @@ public class FileManager implements AcessoBaseDatos {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+	
 
 	}
 
