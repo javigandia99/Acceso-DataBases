@@ -25,6 +25,7 @@ public class Controller {
 		System.out.println("\nDatos:");
 		System.out.println("____________________________________________\n");
 		while (it.hasNext()) {
+			@SuppressWarnings("rawtypes")
 			Map.Entry pair = (Map.Entry) it.next();
 			System.out.println(pair.getKey() + " = " + pair.getValue().toString());
 			it.remove(); // avoids a ConcurrentModificationException
@@ -32,6 +33,7 @@ public class Controller {
 	}
 
 	public void filtrar(HashMap<Integer, Usuarios> list) {
+		System.out.println("Buscador de username: ");
 		String buscousername = sc.nextLine();
 		Map<Integer, Usuarios> filtermap = list.entrySet()
 		                   .stream()
@@ -64,7 +66,7 @@ public class Controller {
 		System.out.println("_______________________________________________\n");
 
 		int vmenu = sc.nextInt();
-		while (vmenu != 0 && vmenu <= 9 && vmenu >= -1) {
+		while (vmenu != 0 && vmenu <= 15 && vmenu >= -1) {
 			switch (vmenu) {
 
 			case 1:
@@ -118,6 +120,8 @@ public class Controller {
 
 			case 10:
 				System.out.println("Opción: 10\n");
+				listfile = file.leer();
+				mostrar(listfile);
 				file.update();
 				break;
 
@@ -133,31 +137,34 @@ public class Controller {
 
 			case 13:
 				System.out.println("Opción: 13\n");
-				bd.intercambiodatos();
+				file.intercambiodatos();
 				break;
 
 			case 14:
 				System.out.println("Opción: 14\n");
-				file.intercambiodatos();
+				bd.intercambiodatos();
 				break;
 			}
 			System.out.println("");
 			System.out.println("_______________________________________________");
-			System.out.println("_______________________________________________");
 			System.out.println("____________________MENU:______________________\n");
 			System.out.println("||BBDD:        | 1: Leer datos\n" 
-					+ "||             | 2: Agregar campo\n"
-					+ "||             | 3: Actualizar campo\n"
-					+ "||             | 4: Eliminar un campo\n"
-					+ "||             | 5: Eliminar todo\n"
-					+ "||             |\n" + "||Fichero:     | 6: Leer datos\n"
-					+ "||             | 7: Agregar campos\n" 
-					+ "||             | 8: Actualizar campos\n"
-					+ "||             | 9: Eliminar un campo\n"
-					+ "||             | 10: Eliminar todo\n"
-					+ "||             |\n" 
-					+ "||Intercambio: | 11: BBDD en fichero\n"
-					+ "||             | 12: Fichero en BBDD \n" + "|| 0: FIN      |");
+					+ "||             | 2: Buscar por username\n"
+					+ "||             | 3: Agregar campo\n" 
+					+ "||             | 4: Actualizar campo\n"
+					+ "||             | 5: Eliminar un campo\n" 
+					+ "||             | 6: Eliminar todo\n"
+					+ "||             |\n"
+					+ "||Fichero:     | 7: Leer datos\n"
+					+ "||             | 8: Buscar por username\n"
+					+ "||             | 9: Agregar campos\n"
+					+ "||             | 10: Actualizar campos\n" 
+					+ "||             | 11: Eliminar un campo\n"
+					+ "||             | 12: Eliminar todo\n" 
+					+ "||             |\n"
+					+ "||Intercambio: | 13: BBDD en fichero\n" 
+					+ "||             | 14: Fichero en BBDD \n"
+					+ "|| 0: FIN      |");
 			System.out.println("_______________________________________________\n");
 			System.out.println("Introduce otro numero o pon 0 para finalizar");
 			vmenu = sc.nextInt();

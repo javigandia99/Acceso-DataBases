@@ -1,25 +1,21 @@
 package Model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.Map.Entry;
-
 import inferface.AcessoBaseDatos;
-
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Properties;
 
 public class BDManager implements AcessoBaseDatos {
@@ -53,10 +49,9 @@ public class BDManager implements AcessoBaseDatos {
 			conexione = DriverManager.getConnection(url, user, pass);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
-			e.printStackTrace();
+
 		} catch (SQLException e) {
 			System.out.println("ERROR: FALLO EN CONEXION DE BASE DE DATOS");
-			e.printStackTrace();
 		} catch (Exception e) {
 			System.out.println("ERROR: GENERAL");
 			e.printStackTrace();
@@ -93,7 +88,6 @@ public class BDManager implements AcessoBaseDatos {
 		Usuarios usu;
 		int contador = 0;
 		try {
-			System.out.println("Leyendo...");
 			String query = "SELECT * FROM user";
 			PreparedStatement stmt = conexione.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
@@ -116,7 +110,6 @@ public class BDManager implements AcessoBaseDatos {
 
 	}
 
-
 	@Override
 	public void insert() {
 		try {
@@ -130,8 +123,6 @@ public class BDManager implements AcessoBaseDatos {
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {
-
-				System.out.println("Insertando...");
 				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"
 						+ mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
@@ -172,7 +163,6 @@ public class BDManager implements AcessoBaseDatos {
 					nuevopassword = sc.nextLine();
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
-					System.out.println("Modificando...");
 
 					query2 = "UPDATE user set password =  '" + nuevopassword + "', description =  '" + nuevodescription
 							+ "' WHERE username = '" + myusername + "'";
@@ -182,7 +172,6 @@ public class BDManager implements AcessoBaseDatos {
 
 					System.out.println("Nuevo password:");
 					nuevopassword = sc.nextLine();
-					System.out.println("Modificando...");
 					query2 = "UPDATE user set password =  '" + nuevopassword + "' WHERE username = '" + myusername
 							+ "'";
 					break;
@@ -190,7 +179,6 @@ public class BDManager implements AcessoBaseDatos {
 				case "description":
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
-					System.out.println("Modificando...");
 					query2 = "UPDATE user set description =  '" + nuevodescription + "' WHERE username = '" + myusername
 							+ "'";
 					break;
@@ -271,20 +259,29 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		// DE BASE DE DATOS A FICHERO
-		FileWriter fichero = null;
-		PrintWriter pw = null;
+		// DE FICHERO A BASE DE DATOS
 		try {
-			fichero = new FileWriter("fichero.txt", true);
 
-			pw = new PrintWriter(fichero);
-			HashMap<Integer, Usuarios> listado = leer();
-			Iterator<Entry<Integer, Usuarios>> it = listado.entrySet().iterator();
-			while (it.hasNext()) {
-				String contenido = it.next().getValue().tofichero();
-				pw.print(contenido);
+			BufferedReader in = new BufferedReader(new FileReader("fichero.txt"));
+			String fich;
+			while ((fich = in.readLine()) != null) {
+
+				String[] partes = fich.split(";");
+				if (notexistUser(partes[0])) {
+					System.out.println(
+							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
+
+					String query = "INSERT INTO user (username, password, description) value ('" + partes[0] + "','"
+							+ partes[1] + "','" + partes[2] + "')";
+					PreparedStatement stmt = conexione.prepareStatement(query);
+					stmt.executeUpdate(query);
+
+				} else {
+					System.out.println("username repetido");
+				}
 			}
-		} catch (IOException e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
