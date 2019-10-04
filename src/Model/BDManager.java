@@ -49,12 +49,15 @@ public class BDManager implements AcessoBaseDatos {
 			conexione = DriverManager.getConnection(url, user, pass);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
+			System.exit(-1);
 
 		} catch (SQLException e) {
 			System.out.println("ERROR: FALLO EN CONEXION DE BASE DE DATOS");
+			System.exit(-1);
 		} catch (Exception e) {
 			System.out.println("ERROR: GENERAL");
 			e.printStackTrace();
+			System.exit(-1);
 		}
 		return conexione;
 	}

@@ -151,17 +151,23 @@ public class FileManager implements AcessoBaseDatos {
 
 	@Override
 	public void deleteall() {
+		try {
+			ficherowriter = new FileWriter("fichero.txt", false);
 
-		PrintWriter pw = new PrintWriter(ficherowriter);
+			pw = new PrintWriter(ficherowriter);
+			System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
+			System.out.println("No habra vuelta atras...");
 
-		System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
-		System.out.println("No habra vuelta atras...");
-		String opcion = sc.nextLine();
-		if (opcion == "si") {
-			pw.write("");
-			System.out.println("Todo el fichero ha sido borrado");
-		} else {
-			System.out.println("NO HA BORRADO NADA");
+			String opcion = sc.nextLine();
+			if (opcion == "si") {
+				pw.write("");
+				System.out.println("Todo el fichero ha sido borrado");
+			} else {
+				System.out.println("NO HA BORRADO NADA");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
