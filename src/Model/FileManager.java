@@ -1,101 +1,40 @@
 package Model;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import inferface.AcessoBaseDatos;
-import java.util.Properties;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 public class FileManager implements AcessoBaseDatos {
-	private Connection conexione;
-	private Scanner sc;
-	protected HashMap<Integer, Usuarios> listadofile;
-	private File config;
-	private Properties properties;
-	private InputStream input;
-	private OutputStream output;
+
+	private Scanner sc = new Scanner(System.in);
+	protected HashMap<Integer, Usuarios> listadofile = new HashMap<Integer, Usuarios>();
 	protected BufferedReader in;
+	private FileWriter ficherowriter;
+	private PrintWriter pw;
+	private String fichero;
 	private String myusername;
 	private String mypassword;
 	private String mydescription;
 
 	public FileManager() {
-		config = new File("src/configuracion.ini");
-		properties = new Properties();
-		output = null;
-		getConnection();
-	}
-
-	public Connection getConnection() {
-		String url = getProperty("url");
-		String user = getProperty("user");
-		String pass = getProperty("pass");
-		String driver = "com.mysql.cj.jdbc.Driver";
-		try {
-			Class.forName(driver);
-			// System.out.println("Conectando a base de datos: " + url);
-			conexione = DriverManager.getConnection(url, user, pass);
-		} catch (ClassNotFoundException e) {
-			System.out.println("ERROR: DRIVER ");
-			e.printStackTrace();
-		} catch (SQLException e) {
-			System.out.println("ERROR: FALLO EN CONEXION DE BASE DE DATOS");
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.out.println("ERROR: GENERAL");
-			e.printStackTrace();
-		}
-		return conexione;
-	}
-
-	public String getProperty(String key) {
-		input = null;
-		try {
-			input = new FileInputStream(config);
-			properties.load(input);
-		} catch (Exception e) {
-			System.out.println("FALLO EN LECTURA DE FICHERO.INI" + e);
-		}
-		String property = properties.getProperty(key);
-		return property;
-	}
-
-	public void setProperty(String key, String value) {
-		properties.setProperty(key, value);
-		try {
-			output = new FileOutputStream(config);
-			properties.store(output, "");
-
-		} catch (IOException e) {
-			System.out.println("Algo salió mal");
-		}
 	}
 
 	@Override
 	public HashMap<Integer, Usuarios> leer() {
-		listadofile = new HashMap<Integer, Usuarios>();
 		Usuarios usu;
 		int contador = 0;
 
 		try {
 			in = new BufferedReader(new FileReader("fichero.txt"));
-			String fichero;
-			System.out.println("Leyendo...");
 			while ((fichero = in.readLine()) != null) {
 				String[] partes = fichero.split(";");
 				contador++;
@@ -117,14 +56,9 @@ public class FileManager implements AcessoBaseDatos {
 
 	@Override
 	public void insert() {
-		FileWriter fichero = null;
-		PrintWriter pw = null;
-
 		try {
-
-			fichero = new FileWriter("fichero.txt", true);
-			pw = new PrintWriter(fichero);
-			sc = new Scanner(System.in);
+			ficherowriter = new FileWriter("fichero.txt", true);
+			pw = new PrintWriter(ficherowriter);
 			System.out.println("username:");
 			myusername = sc.nextLine();
 			System.out.println("password:");
@@ -138,8 +72,8 @@ public class FileManager implements AcessoBaseDatos {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (null != fichero)
-					fichero.close();
+				if (null != ficherowriter)
+					ficherowriter.close();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -148,19 +82,67 @@ public class FileManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void delete() {
+	public void update() {
 		try {
+			in = new BufferedReader(new FileReader("fichero.txt"));
+			String fichero;
+			System.out.println("Introduce username: ");
+			myusername = sc.nextLine();
+			while ((fichero = in.readLine()) != null) {
 
-			sc = new Scanner(System.in);
+				if (fichero.contains(myusername)) {
+					System.out.println("esta en  el fichero");
+
+					System.out.println("Que quiere cambiar del username: " + myusername);
+					System.out.println("todo - passsword - description - nada");
+					String posibilidad = sc.nextLine();
+
+					switch (posibilidad) {
+					case "todo":
+						System.out.println("nuevo password: ");
+
+						System.out.println("nueva description: ");
+						break;
+
+					case "password":
+						System.out.println("nuevo password: ");
+
+						break;
+
+					case "description":
+						System.out.println("nueva description: ");
+
+						break;
+
+					case "nada":
+						// Salida del switch
+						break;
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+	}
+
+	@Override
+	public void deleteuno() {
+
+		try {
+			in = new BufferedReader(new FileReader("fichero.txt"));
+			fichero = null;
 			System.out.println("Introduce un username para borrar:");
 			myusername = sc.nextLine();
-			if (existUser(myusername)) {
-				System.out.println("Borrando...");
-				System.out.println("Delete proximamente");
-			} else {
-				System.out.println("No existe el usuario escrito");
-			}
+			while ((fichero = in.readLine()) != null) {
+				if (fichero.contains(myusername)) {
+					System.out.println("Borrando...");
 
+				} else {
+					System.out.println("No existe el usuario escrito");
+				}
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -168,54 +150,47 @@ public class FileManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void intercambiodatos() {
-
+	public void deleteall() {
 		try {
+			ficherowriter = new FileWriter("fichero.txt", false);
 
-			in = new BufferedReader(new FileReader("fichero.txt"));
-			String fich;
-			while ((fich = in.readLine()) != null) {
+			pw = new PrintWriter(ficherowriter);
+			System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
+			System.out.println("No habra vuelta atras...");
 
-				String[] partes = fich.split(";");
-				if (existUser(partes[0])) {
-					System.out.println("username repetido");
-				} else {
-					System.out.println(
-							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
-
-					String query = "INSERT INTO user (username, password, description) value ('" + partes[0] + "','"
-							+ partes[1] + "','" + partes[2] + "')";
-					PreparedStatement stmt = conexione.prepareStatement(query);
-					stmt.executeUpdate(query);
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public boolean existUser(String user) {
-		String query = "SELECT username FROM user WHERE username LIKE ?";
-		PreparedStatement stmt;
-		try {
-			stmt = conexione.prepareStatement(query);
-			stmt.setString(1, user);
-			ResultSet rset = stmt.executeQuery();
-			boolean exist = rset.next();
-			rset.close();
-			stmt.close();
-
-			if (exist) {
-				return true;
+			String opcion = sc.nextLine();
+			if (opcion == "si") {
+				pw.write("");
+				System.out.println("Todo el fichero ha sido borrado");
 			} else {
-				return false;
+				System.out.println("NO HA BORRADO NADA");
 			}
-		} catch (SQLException e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
 
 	}
+
+	@Override
+	public void intercambiodatos() {
+		// DE BASE DE DATOS A FICHERO
+		FileWriter fichero = null;
+		PrintWriter pw = null;
+		try {
+			fichero = new FileWriter("fichero.txt", true);
+
+			pw = new PrintWriter(fichero);
+			HashMap<Integer, Usuarios> listado = leer();
+			Iterator<Entry<Integer, Usuarios>> it = listado.entrySet().iterator();
+			while (it.hasNext()) {
+				String contenido = it.next().getValue().tofichero();
+				pw.print(contenido);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 }

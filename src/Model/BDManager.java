@@ -1,25 +1,21 @@
 package Model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.Map.Entry;
-
 import inferface.AcessoBaseDatos;
-
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Properties;
 
 public class BDManager implements AcessoBaseDatos {
@@ -53,13 +49,15 @@ public class BDManager implements AcessoBaseDatos {
 			conexione = DriverManager.getConnection(url, user, pass);
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
-			e.printStackTrace();
+			System.exit(-1);
+
 		} catch (SQLException e) {
 			System.out.println("ERROR: FALLO EN CONEXION DE BASE DE DATOS");
-			e.printStackTrace();
+			System.exit(-1);
 		} catch (Exception e) {
 			System.out.println("ERROR: GENERAL");
 			e.printStackTrace();
+			System.exit(-1);
 		}
 		return conexione;
 	}
@@ -93,7 +91,6 @@ public class BDManager implements AcessoBaseDatos {
 		Usuarios usu;
 		int contador = 0;
 		try {
-			System.out.println("Leyendo...");
 			String query = "SELECT * FROM user";
 			PreparedStatement stmt = conexione.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
@@ -119,7 +116,6 @@ public class BDManager implements AcessoBaseDatos {
 	@Override
 	public void insert() {
 		try {
-
 			sc = new Scanner(System.in);
 			System.out.println("introduce un username: ");
 			myusername = sc.nextLine();
@@ -130,8 +126,6 @@ public class BDManager implements AcessoBaseDatos {
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {
-
-				System.out.println("Insertando...");
 				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"
 						+ mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
@@ -142,13 +136,70 @@ public class BDManager implements AcessoBaseDatos {
 			}
 
 		} catch (SQLException e) {
+			e.getMessage();
+		}
+
+	}
+
+	@Override
+	public void update() {
+		try {
+
+			sc = new Scanner(System.in);
+			System.out.println("introduce un username: ");
+			myusername = sc.nextLine();
+			// vamos a modificar un registro
+			if (notexistUser(myusername)) {
+				System.out.println("USERNAME NO EXISTE");
+
+			} else {
+
+				System.out.println("Introduce que quieres modificar: todo   password    description");
+				String posibilidad = sc.nextLine();
+				String query2 = null;
+				String nuevopassword = null;
+				String nuevodescription = null;
+				switch (posibilidad) {
+				case "todo":
+					System.out.println("El username NUNCA se va a poder Modificar");
+					System.out.println("Nuevo password:");
+					nuevopassword = sc.nextLine();
+					System.out.println("Nueva description:");
+					nuevodescription = sc.nextLine();
+
+					query2 = "UPDATE user set password =  '" + nuevopassword + "', description =  '" + nuevodescription
+							+ "' WHERE username = '" + myusername + "'";
+					break;
+
+				case "password":
+
+					System.out.println("Nuevo password:");
+					nuevopassword = sc.nextLine();
+					query2 = "UPDATE user set password =  '" + nuevopassword + "' WHERE username = '" + myusername
+							+ "'";
+					break;
+
+				case "description":
+					System.out.println("Nueva description:");
+					nuevodescription = sc.nextLine();
+					query2 = "UPDATE user set description =  '" + nuevodescription + "' WHERE username = '" + myusername
+							+ "'";
+					break;
+				}
+
+				PreparedStatement stmt = conexione.prepareStatement(query2);
+				stmt.executeUpdate(query2);
+				System.out.println("Update correcto!");
+			}
+
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 
 	}
 
 	@Override
-	public void delete() {
+	public void deleteuno() {
 		try {
 
 			sc = new Scanner(System.in);
@@ -171,6 +222,29 @@ public class BDManager implements AcessoBaseDatos {
 
 	}
 
+	@Override
+	public void deleteall() {
+		System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
+		System.out.println("No habra vuelta atras...");
+		String opcion = sc.nextLine();
+		if (opcion == "si") {
+			System.out.println("Delete ALL correcto!");
+			String query = "TRUNCATE user";
+			PreparedStatement stmt;
+			try {
+				stmt = conexione.prepareStatement(query);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				System.err.println("Fallo en ejecutar delete all");
+				e.printStackTrace();
+			}
+
+		} else {
+			System.out.println("NO HA BORRADO NADA");
+		}
+
+	}
+
 	public boolean notexistUser(String user) throws SQLException {
 		String query = "SELECT username FROM user WHERE username LIKE ?";
 		PreparedStatement stmt = conexione.prepareStatement(query);
@@ -188,21 +262,32 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		FileWriter fichero = null;
-		PrintWriter pw = null;
+		// DE FICHERO A BASE DE DATOS
 		try {
-			fichero = new FileWriter("fichero.txt", true);
 
-			pw = new PrintWriter(fichero);
-			HashMap<Integer, Usuarios> listado = leer();
-			Iterator<Entry<Integer, Usuarios>> it = listado.entrySet().iterator();
-			while (it.hasNext()) {
-				String contenido = it.next().getValue().tofichero();
-				pw.print(contenido);
+			BufferedReader in = new BufferedReader(new FileReader("fichero.txt"));
+			String fich;
+			while ((fich = in.readLine()) != null) {
+
+				String[] partes = fich.split(";");
+				if (notexistUser(partes[0])) {
+					System.out.println(
+							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
+
+					String query = "INSERT INTO user (username, password, description) value ('" + partes[0] + "','"
+							+ partes[1] + "','" + partes[2] + "')";
+					PreparedStatement stmt = conexione.prepareStatement(query);
+					stmt.executeUpdate(query);
+
+				} else {
+					System.out.println("username repetido");
+				}
 			}
-		} catch (IOException e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
+
 }
