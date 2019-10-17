@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-
 import Model.BDManager;
 import Model.FileManager;
+import Model.HibernateManager;
 import Model.Usuarios;
 
 public class Controller {
@@ -16,8 +16,10 @@ public class Controller {
 	// private MongoManager mongo;
 	protected HashMap<Integer, Usuarios> listbd;
 	protected HashMap<Integer, Usuarios> listfile;
+	protected HashMap<Integer, Usuarios> listhm;
 	protected BDManager bd = new BDManager();
 	protected FileManager file = new FileManager();
+	protected HibernateManager hm = new HibernateManager();
 	protected Scanner sc = new Scanner(System.in);
 
 	public void mostrar(HashMap<Integer, Usuarios> list) {
@@ -35,38 +37,33 @@ public class Controller {
 	public void filtrar(HashMap<Integer, Usuarios> list) {
 		System.out.println("Buscador de username: ");
 		String buscousername = sc.nextLine();
-		Map<Integer, Usuarios> filtermap = list.entrySet()
-		                   .stream()
-		                   .filter(s -> s.getValue().getUsername().equalsIgnoreCase(buscousername))
-		                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		Map<Integer, Usuarios> filtermap = list.entrySet().stream()
+				.filter(s -> s.getValue().getUsername().equalsIgnoreCase(buscousername))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 		System.out.println(filtermap.toString());
 	}
 
 	public void menu() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("_______________________________________________");
+		System.out.println("");
 		System.out.println("____________________MENU:______________________\n");
-		System.out.println("||BBDD:        | 1: Leer datos\n" 
-				+ "||             | 2: Buscar por username\n"
-				+ "||             | 3: Agregar campo\n" 
-				+ "||             | 4: Actualizar campo\n"
-				+ "||             | 5: Eliminar un campo\n" 
-				+ "||             | 6: Eliminar todo\n"
-				+ "||             |\n"
-				+ "||Fichero:     | 7: Leer datos\n"
-				+ "||             | 8: Buscar por username\n"
-				+ "||             | 9: Agregar campos\n"
-				+ "||             | 10: Actualizar campos\n" 
-				+ "||             | 11: Eliminar un campo\n"
-				+ "||             | 12: Eliminar todo\n" 
-				+ "||             |\n"
-				+ "||Intercambio: | 13: BBDD en fichero\n" 
-				+ "||             | 14: Fichero en BBDD \n"
-				+ "|| 0: FIN      |");
+		System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Buscar por username\n"
+				+ "||             | 3: Agregar campo\n" + "||             | 4: Actualizar campo\n"
+				+ "||             | 5: Eliminar un campo\n" + "||             | 6: Eliminar todo\n"
+				+ "||             |\n" + "||Fichero:     | 7: Leer datos\n"
+				+ "||             | 8: Buscar por username\n" + "||             | 9: Agregar campos\n"
+				+ "||             | 10: Actualizar campos\n" + "||             | 11: Eliminar un campo\n"
+				+ "||             | 12: Eliminar todo\n" + "||             |\n" + "||HIBERNATE:   | 13: Leer datos\n"
+				+ "||             | 14: Buscar por username\n" + "||             | 15: Agregar campos\n"
+				+ "||             | 16: Actualizar campos\n" + "||             | 17: Eliminar un campo\n"
+				+ "||             | 18: Eliminar todo\n" + "||             |\n"
+				+ "||Intercambio: | 19: BBDD en fichero\n" + "||             | 20: Fichero en BBDD \n"
+				+ "||             | 21: HIBERNATE \n" + "|| 0: FIN      |");
 		System.out.println("_______________________________________________\n");
 
 		int vmenu = sc.nextInt();
-		while (vmenu != 0 && vmenu <= 15 && vmenu >= -1) {
+		while (vmenu != 0 && vmenu <= 22 && vmenu >= -1) {
 			switch (vmenu) {
 
 			case 1:
@@ -137,33 +134,68 @@ public class Controller {
 
 			case 13:
 				System.out.println("Opción: 13\n");
-				file.intercambiodatos();
+				listhm = hm.leer();
+				mostrar(listhm);
 				break;
 
 			case 14:
 				System.out.println("Opción: 14\n");
+				listhm = hm.leer();
+				filtrar(listhm);
+				break;
+
+			case 15:
+				System.out.println("Opción: 15\n");
+				hm.insert();
+				break;
+
+			case 16:
+				System.out.println("Opción: 16\n");
+				listhm = hm.leer();
+				mostrar(listhm);
+				hm.update();
+				break;
+
+			case 17:
+				System.out.println("Opción: 17\n");
+				hm.deleteuno();
+				break;
+
+			case 18:
+				System.out.println("Opción: 18\n");
+				hm.deleteall();
+				break;
+
+			case 19:
+				System.out.println("Opción: 19\n");
+				file.intercambiodatos();
+				break;
+
+			case 20:
+				System.out.println("Opción: 20\n");
 				bd.intercambiodatos();
 				break;
+			case 21:
+				System.out.println("Opción: 21\n");
+				hm.intercambiodatos();
+				break;
+
 			}
-			System.out.println("");
 			System.out.println("_______________________________________________");
+			System.out.println("");
 			System.out.println("____________________MENU:______________________\n");
-			System.out.println("||BBDD:        | 1: Leer datos\n" 
-					+ "||             | 2: Buscar por username\n"
-					+ "||             | 3: Agregar campo\n" 
-					+ "||             | 4: Actualizar campo\n"
-					+ "||             | 5: Eliminar un campo\n" 
-					+ "||             | 6: Eliminar todo\n"
-					+ "||             |\n"
-					+ "||Fichero:     | 7: Leer datos\n"
-					+ "||             | 8: Buscar por username\n"
-					+ "||             | 9: Agregar campos\n"
-					+ "||             | 10: Actualizar campos\n" 
-					+ "||             | 11: Eliminar un campo\n"
-					+ "||             | 12: Eliminar todo\n" 
-					+ "||             |\n"
-					+ "||Intercambio: | 13: BBDD en fichero\n" 
-					+ "||             | 14: Fichero en BBDD \n"
+			System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Buscar por username\n"
+					+ "||             | 3: Agregar campo\n" + "||             | 4: Actualizar campo\n"
+					+ "||             | 5: Eliminar un campo\n" + "||             | 6: Eliminar todo\n"
+					+ "||             |\n" + "||Fichero:     | 7: Leer datos\n"
+					+ "||             | 8: Buscar por username\n" + "||             | 9: Agregar campos\n"
+					+ "||             | 10: Actualizar campos\n" + "||             | 11: Eliminar un campo\n"
+					+ "||             | 12: Eliminar todo\n" + "||             |\n"
+					+ "||HIBERNATE:   | 13: Leer datos\n" + "||             | 14: Buscar por username\n"
+					+ "||             | 15: Agregar campos\n" + "||             | 16: Actualizar campos\n"
+					+ "||             | 17: Eliminar un campo\n" + "||             | 18: Eliminar todo\n"
+					+ "||             |\n" + "||Intercambio: | 19: BBDD en fichero\n"
+					+ "||             | 20: Fichero en BBDD \n" + "||             | 21: HIBERNATE \n"
 					+ "|| 0: FIN      |");
 			System.out.println("_______________________________________________\n");
 			System.out.println("Introduce otro numero o pon 0 para finalizar");

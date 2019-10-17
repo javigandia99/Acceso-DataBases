@@ -126,7 +126,7 @@ public class BDManager implements AcessoBaseDatos {
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {
-				String query2 = "insert into user (username, password, description) value ('" + myusername + "','"
+				String query2 = "insert into user (db_username,db_password,db_description) value ('" + myusername + "','"
 						+ mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
@@ -167,22 +167,22 @@ public class BDManager implements AcessoBaseDatos {
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
 
-					query2 = "UPDATE user set password =  '" + nuevopassword + "', description =  '" + nuevodescription
-							+ "' WHERE username = '" + myusername + "'";
+					query2 = "UPDATE user set db_password =  '" + nuevopassword + "', db_description =  '" + nuevodescription
+							+ "' WHERE db_username = '" + myusername + "'";
 					break;
 
 				case "password":
 
 					System.out.println("Nuevo password:");
 					nuevopassword = sc.nextLine();
-					query2 = "UPDATE user set password =  '" + nuevopassword + "' WHERE username = '" + myusername
+					query2 = "UPDATE user set db_password =  '" + nuevopassword + "' WHERE db_username = '" + myusername
 							+ "'";
 					break;
 
 				case "description":
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
-					query2 = "UPDATE user set description =  '" + nuevodescription + "' WHERE username = '" + myusername
+					query2 = "UPDATE user set db_description =  '" + nuevodescription + "' WHERE db_username = '" + myusername
 							+ "'";
 					break;
 				}
@@ -209,7 +209,7 @@ public class BDManager implements AcessoBaseDatos {
 				System.out.println("No existe el usuario escrito");
 			} else {
 				System.out.println("Borrando...");
-				String query = "DELETE FROM user WHERE username LIKE ('" + myusername + "')";
+				String query = "DELETE FROM user WHERE db_username LIKE ('" + myusername + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query);
 				stmt.executeUpdate();
 				System.out.println("Delete correcto!");
@@ -274,8 +274,7 @@ public class BDManager implements AcessoBaseDatos {
 					System.out.println(
 							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
 
-					String query = "INSERT INTO user (username, password, description) value ('" + partes[0] + "','"
-							+ partes[1] + "','" + partes[2] + "')";
+					String query = "INSERT INTO user (db_username, db_password, db_description) value ('" + partes[0] + "','"+ partes[1] + "','" + partes[2] + "')";
 					PreparedStatement stmt = conexione.prepareStatement(query);
 					stmt.executeUpdate(query);
 
