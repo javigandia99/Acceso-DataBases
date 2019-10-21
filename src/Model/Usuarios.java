@@ -1,10 +1,14 @@
 package Model;
 
 public class Usuarios {
-	
+
 	protected String username;
 	protected String password;
 	protected String description;
+
+	public Usuarios() {
+
+	}
 
 	public Usuarios(String username, String password, String description) {
 		this.username = username;
