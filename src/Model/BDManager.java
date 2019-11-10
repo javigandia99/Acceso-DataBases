@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.Map.Entry;
 import inferface.AcessoBaseDatos;
 import java.util.HashMap;
 import java.util.Properties;
@@ -45,8 +46,8 @@ public class BDManager implements AcessoBaseDatos {
 		String driver = "com.mysql.cj.jdbc.Driver";
 		try {
 			Class.forName(driver);
-			System.out.println("Conectando a base de datos: " + url);
 			conexione = DriverManager.getConnection(url, user, pass);
+			System.out.println("CONEXIÓN CON BBDD SQL CORRECTA");
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
 			System.exit(-1);
@@ -126,8 +127,8 @@ public class BDManager implements AcessoBaseDatos {
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {
-				String query2 = "insert into user (db_username,db_password,db_description) value ('" + myusername + "','"
-						+ mypassword + "','" + mydescription + "')";
+				String query2 = "insert into user (db_username,db_password,db_description) value ('" + myusername
+						+ "','" + mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
 				System.out.println("Insert correcto!");
@@ -167,8 +168,8 @@ public class BDManager implements AcessoBaseDatos {
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
 
-					query2 = "UPDATE user set db_password =  '" + nuevopassword + "', db_description =  '" + nuevodescription
-							+ "' WHERE db_username = '" + myusername + "'";
+					query2 = "UPDATE user set db_password =  '" + nuevopassword + "', db_description =  '"
+							+ nuevodescription + "' WHERE db_username = '" + myusername + "'";
 					break;
 
 				case "password":
@@ -182,8 +183,8 @@ public class BDManager implements AcessoBaseDatos {
 				case "description":
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
-					query2 = "UPDATE user set db_description =  '" + nuevodescription + "' WHERE db_username = '" + myusername
-							+ "'";
+					query2 = "UPDATE user set db_description =  '" + nuevodescription + "' WHERE db_username = '"
+							+ myusername + "'";
 					break;
 				}
 
@@ -224,7 +225,7 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void deleteall() {
-		System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
+		System.out.println("¿Estas seguro de borrar todo el contenido de la BBDD SQl?");
 		System.out.println("No habra vuelta atras...");
 		String opcion = sc.nextLine();
 		if (opcion == "si") {
@@ -274,7 +275,8 @@ public class BDManager implements AcessoBaseDatos {
 					System.out.println(
 							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
 
-					String query = "INSERT INTO user (db_username, db_password, db_description) value ('" + partes[0] + "','"+ partes[1] + "','" + partes[2] + "')";
+					String query = "INSERT INTO user (db_username, db_password, db_description) value ('" + partes[0]
+							+ "','" + partes[1] + "','" + partes[2] + "')";
 					PreparedStatement stmt = conexione.prepareStatement(query);
 					stmt.executeUpdate(query);
 
@@ -287,6 +289,33 @@ public class BDManager implements AcessoBaseDatos {
 			e.printStackTrace();
 		}
 
+	}
+
+	public boolean insertarusu(Usuarios usu) {
+		HashMap<Integer, Usuarios> lista = leer();
+		String username = usu.getUsername();
+
+		PreparedStatement pstm;
+		try {
+			pstm = conexione
+					.prepareStatement("insert into user (db_username,db_password,db_description) values (?,?,?)");
+			pstm.setString(1, usu.getUsername());
+			pstm.setString(2, usu.getPassword());
+			pstm.setString(3, usu.getDescription());
+
+			pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	public void intercambiodatoslist(HashMap<Integer, Usuarios> listanueva) {
+		deleteall();
+		for (Entry<Integer, Usuarios> entry : listanueva.entrySet()) {
+			insertarusu(listanueva.get(entry.getKey()));
+		}
+		System.out.println("INTERCAMBIO DE BBDD SQL CORRECTO");
 	}
 
 }

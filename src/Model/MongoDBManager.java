@@ -16,10 +16,15 @@ public class MongoDBManager implements AcessoBaseDatos {
 
 	@SuppressWarnings("deprecation")
 	public MongoDBManager() {
-		mongo = new MongoClient("localhost", 27017);
-		database = mongo.getDB("db_users");
-		collection = (DBCollection) database.getCollection("user");
-
+		try {
+			mongo = new MongoClient("localhost", 27017);
+			database = mongo.getDB("db_users");
+			collection = (DBCollection) database.getCollection("user");
+			System.out.println("CONEXIÓN CON MONGO CORRECTA");
+		} catch (Exception e) {
+			System.out.println("mongo no encendido");
+			e.addSuppressed(e);
+		}
 	}
 
 	@Override
@@ -102,7 +107,7 @@ public class MongoDBManager implements AcessoBaseDatos {
 
 	@Override
 	public void intercambiodatos() {
-		//TODO: no hace falta implementar este metodo 
+		// TODO: no hace falta implementar este metodo
 	}
 
 	public void intercambiodatoslist(HashMap<Integer, Usuarios> listanueva) {
@@ -110,7 +115,7 @@ public class MongoDBManager implements AcessoBaseDatos {
 		for (Entry<Integer, Usuarios> entry : listanueva.entrySet()) {
 			insertarusu(listanueva.get(entry.getKey()));
 		}
-		System.out.println("CORRECTO INTERCAMBIO DE BBDD-MONGO");
+		System.out.println("INTERCAMBIO DE MONGO CORRECTO");
 	}
 
 	public boolean insertarusu(Usuarios usu) {
@@ -122,7 +127,6 @@ public class MongoDBManager implements AcessoBaseDatos {
 		object.put("password", usu.getPassword());
 		object.put("description", usu.getDescription());
 		collection.insert(object);
-		System.out.println("insertusu correto");
 		return true;
 	}
 

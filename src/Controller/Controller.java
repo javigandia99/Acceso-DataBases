@@ -50,21 +50,39 @@ public class Controller {
 		System.out.println("_______________________________________________");
 		System.out.println("");
 		System.out.println("____________________MENU:______________________\n");
-		System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Buscar por username\n"
-				+ "||             | 3: Agregar campo\n" + "||             | 4: Actualizar campo\n"
-				+ "||             | 5: Eliminar un campo\n" + "||             | 6: Eliminar todo\n"
-				+ "||             |\n" + "||Fichero:     | 7: Leer datos\n"
-				+ "||             | 8: Buscar por username\n" + "||             | 9: Agregar campos\n"
-				+ "||             | 10: Actualizar campos\n" + "||             | 11: Eliminar un campo\n"
-				+ "||             | 12: Eliminar todo\n" + "||             |\n" + "||HIBERNATE:   | 13: Leer datos\n"
-				+ "||             | 14: Buscar por username\n" + "||             | 15: Agregar campos\n"
-				+ "||             | 16: Actualizar campos\n" + "||             | 17: Eliminar un campo\n"
-				+ "||             | 18: Eliminar todo\n" + "||             |\n" + "||MONGODB:     | 19: Leer datos\n"
-				+ "||             | 20: Buscar por username\n" + "||             | 21: Agregar campos\n"
-				+ "||             | 22: Actualizar campos\n" + "||             | 23: Eliminar un campo\n"
-				+ "||             | 24: Eliminar todo\n" + "||             |\n"
-				+ "||Intercambio: | 25: BBDD en fichero\n" + "||             | 26: Fichero en BBDD \n"
-				+ "||             | 27: HIBERNATE \n" + "||             | 28: MONGODB \n" + "|| 0: FIN      |");
+		System.out.println("||BBDD:        | 1: Leer datos\n" 
+				+ "||             | 2: Buscar por username\n"
+				+ "||             | 3: Agregar campo\n"
+				+ "||             | 4: Actualizar campo\n"
+				+ "||             | 5: Eliminar un campo\n"
+				+ "||             | 6: Eliminar todo\n"
+				+ "||             |\n"
+				+ "||Fichero:     | 7: Leer datos\n"
+				+ "||             | 8: Buscar por username\n"
+				+ "||             | 9: Agregar campos\n"
+				+ "||             | 10: Actualizar campos\n"
+				+ "||             | 11: Eliminar un campo\n"
+				+ "||             | 12: Eliminar todo\n"
+				+ "||             |\n"
+				+ "||HIBERNATE:   | 13: Leer datos\n"
+				+ "||             | 14: Buscar por username\n"
+				+ "||             | 15: Agregar campos\n"
+				+ "||             | 16: Actualizar campos\n"
+				+ "||             | 17: Eliminar un campo\n"
+				+ "||             | 18: Eliminar todo\n"
+				+ "||             |\n"
+				+ "||MONGODB:     | 19: Leer datos\n"
+				+ "||             | 20: Buscar por username\n"
+				+ "||             | 21: Agregar campos\n"
+				+ "||             | 22: Actualizar campos\n"
+				+ "||             | 23: Eliminar un campo\n"
+				+ "||             | 24: Eliminar todo\n"
+				+ "||             |\n"
+				+ "||Intercambio: | 25: BBDD\n"
+				+ "||             | 26: Fichero\n"
+				+ "||             | 27: HIBERNATE\n"
+				+ "||             | 28: MONGODB\n"
+				+ "" + "|| 0: FIN      |");
 		System.out.println("_______________________________________________\n");
 
 		int vmenu = sc.nextInt();
@@ -253,15 +271,28 @@ public class Controller {
 				break;
 
 			case 25:
-				// FILE
+				// BBDD
 				System.out.println("Opción: 25\n");
-				file.intercambiodatos();
+				System.out.println("INTRODUCE (1 FILE) (2 HIBERNATE) (3 MONGO) PARA IMPORTARLO A BBDD");
+				int importarabd = sc.nextInt();
+				switch (importarabd) {
+				case 1:
+					bd.intercambiodatoslist(file.leer());
+					break;
+				case 2:
+					bd.intercambiodatoslist(hm.leer());
+					break;
+				case 3:
+					bd.intercambiodatoslist(mongo.leer());
+					break;
+				}
 				break;
 
 			case 26:
-				// BBDD
+				// FILE
 				System.out.println("Opción: 26\n");
-				bd.intercambiodatos();
+				
+				file.intercambiodatos();
 				break;
 			case 27:
 				// HIBERNATE
@@ -272,8 +303,8 @@ public class Controller {
 				// MONGO
 				System.out.println("Opción: 28\n");
 				System.out.println("INTRODUCE (1 BD) (2 FILE) (3 HIBERNATE) PARA IMPORTARLO A MONGO");
-				int importar = sc.nextInt();
-				switch (importar) {
+				int importaramongo = sc.nextInt();
+				switch (importaramongo) {
 				case 1:
 					mongo.intercambiodatoslist(bd.leer());
 					break;
@@ -284,27 +315,43 @@ public class Controller {
 					mongo.intercambiodatoslist(hm.leer());
 					break;
 				}
-
+				break;
 			}
-			System.out.println("_______________________________________________");
 			System.out.println("");
 			System.out.println("____________________MENU:______________________\n");
-			System.out.println("||BBDD:        | 1: Leer datos\n" + "||             | 2: Buscar por username\n"
-					+ "||             | 3: Agregar campo\n" + "||             | 4: Actualizar campo\n"
-					+ "||             | 5: Eliminar un campo\n" + "||             | 6: Eliminar todo\n"
-					+ "||             |\n" + "||Fichero:     | 7: Leer datos\n"
-					+ "||             | 8: Buscar por username\n" + "||             | 9: Agregar campos\n"
-					+ "||             | 10: Actualizar campos\n" + "||             | 11: Eliminar un campo\n"
-					+ "||             | 12: Eliminar todo\n" + "||             |\n"
-					+ "||HIBERNATE:   | 13: Leer datos\n" + "||             | 14: Buscar por username\n"
-					+ "||             | 15: Agregar campos\n" + "||             | 16: Actualizar campos\n"
-					+ "||             | 17: Eliminar un campo\n" + "||             | 18: Eliminar todo\n"
-					+ "||             |\n" + "||MONGODB:     | 19: Leer datos\n"
-					+ "||             | 20: Buscar por username\n" + "||             | 21: Agregar campos\n"
-					+ "||             | 22: Actualizar campos\n" + "||             | 23: Eliminar un campo\n"
-					+ "||             | 24: Eliminar todo\n" + "||             |\n"
-					+ "||Intercambio: | 25: BBDD en fichero\n" + "||             | 26: Fichero en BBDD \n"
-					+ "||             | 27: HIBERNATE \n" + "||             | 28: MONGODB \n" + "|| 0: FIN      |");
+			System.out.println("||BBDD:        | 1: Leer datos\n"
+					+ "||             | 2: Buscar por username\n"
+					+ "||             | 3: Agregar campo\n"
+					+ "||             | 4: Actualizar campo\n"
+					+ "||             | 5: Eliminar un campo\n"
+					+ "||             | 6: Eliminar todo\n"
+					+ "||             |\n"
+					+ "||Fichero:     | 7: Leer datos\n"
+					+ "||             | 8: Buscar por username\n"
+					+ "||             | 9: Agregar campos\n"
+					+ "||             | 10: Actualizar campos\n"
+					+ "||             | 11: Eliminar un campo\n"
+					+ "||             | 12: Eliminar todo\n"
+					+ "||             |\n"
+					+ "||HIBERNATE:   | 13: Leer datos\n"
+					+ "||             | 14: Buscar por username\n"
+					+ "||             | 15: Agregar campos\n"
+					+ "||             | 16: Actualizar campos\n"
+					+ "||             | 17: Eliminar un campo\n"
+					+ "||             | 18: Eliminar todo\n"
+					+ "||             |\n"
+					+ "||MONGODB:     | 19: Leer datos\n"
+					+ "||             | 20: Buscar por username\n"
+					+ "||             | 21: Agregar campos\n"
+					+ "||             | 22: Actualizar campos\n"
+					+ "||             | 23: Eliminar un campo\n"
+					+ "||             | 24: Eliminar todo\n"
+					+ "||             |\n"
+					+ "||Intercambio: | 25: BBDD\n"
+					+ "||             | 26: Fichero\n"
+					+ "||             | 27: HIBERNATE\n"
+					+ "||             | 28: MONGODB\n"
+					+ "|| 0: FIN      |");
 			System.out.println("_______________________________________________\n");
 			System.out.println("Introduce otro numero o pon 0 para finalizar");
 			vmenu = sc.nextInt();

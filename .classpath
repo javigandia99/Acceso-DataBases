@@ -6,12 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="mysql-connector-java-8.0.11.jar">
+	<classpathentry kind="lib" path="drivers/mongo-java-driver-3.11.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="mongo-java-driver-3.11.1.jar">
+	<classpathentry kind="lib" path="drivers/mysql-connector-java-8.0.11.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
