@@ -24,7 +24,6 @@ public class HibernateManager implements AcessoBaseDatos {
 	String myusername;
 
 	public HibernateManager() {
-
 		Logger.getLogger("org.hibernate").setLevel(Level.OFF);
 		HibernateUtil util = new HibernateUtil();
 		session = util.getSessionFactory().openSession();
@@ -65,7 +64,6 @@ public class HibernateManager implements AcessoBaseDatos {
 
 	@Override
 	public void update() {
-		Usuarios usu;
 		try {
 			System.out.println("introduce un username: ");
 			usu = (Usuarios) session.load(Usuarios.class, sc.nextLine());
@@ -114,12 +112,10 @@ public class HibernateManager implements AcessoBaseDatos {
 
 	@Override
 	public void deleteall() {
-		System.out.println("Inicio Borrado");
-
 		session.beginTransaction();
 		Query q = session.createQuery("DELETE FROM Usuarios");
 		q.executeUpdate();
-
+		System.out.println("Borrado CORRECTAMENTE");
 		session.getTransaction().commit();
 		System.out.println("Fin Borrado");
 
@@ -127,7 +123,6 @@ public class HibernateManager implements AcessoBaseDatos {
 
 	}
 
-	@Override
 	public void intercambiodatos() {
 		try {
 
@@ -172,4 +167,11 @@ public class HibernateManager implements AcessoBaseDatos {
 			return false;
 		}
 	}
+
+	@Override
+	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd) {
+		// TODO:Imlements method to exchange data base
+
+	}
+
 }

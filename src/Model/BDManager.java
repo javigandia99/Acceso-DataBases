@@ -95,8 +95,6 @@ public class BDManager implements AcessoBaseDatos {
 			String query = "SELECT * FROM user";
 			PreparedStatement stmt = conexione.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
-
-			System.out.println("Query ejecutada correctamente");
 			while (rs.next()) {
 				contador++;
 				myusername = rs.getString(1);
@@ -225,29 +223,20 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void deleteall() {
-		System.out.println("¿Estas seguro de borrar todo el contenido de la BBDD SQl?");
-		System.out.println("No habra vuelta atras...");
-		String opcion = sc.nextLine();
-		if (opcion == "si") {
+		String query = "DELETE FROM user";
+		PreparedStatement stmt;
+		try {
+			stmt = conexione.prepareStatement(query);
+			stmt.executeUpdate();
 			System.out.println("Delete ALL correcto!");
-			String query = "TRUNCATE user";
-			PreparedStatement stmt;
-			try {
-				stmt = conexione.prepareStatement(query);
-				stmt.executeUpdate();
-			} catch (SQLException e) {
-				System.err.println("Fallo en ejecutar delete all");
-				e.printStackTrace();
-			}
-
-		} else {
-			System.out.println("NO HA BORRADO NADA");
+		} catch (SQLException e) {
+			System.err.println("Fallo en ejecutar: delete all");
+			e.printStackTrace();
 		}
-
 	}
 
 	public boolean notexistUser(String user) throws SQLException {
-		String query = "SELECT username FROM user WHERE username LIKE ?";
+		String query = "SELECT username FROM user WHERE db_username LIKE ?";
 		PreparedStatement stmt = conexione.prepareStatement(query);
 		stmt.setString(1, user);
 		ResultSet rset = stmt.executeQuery();
@@ -261,59 +250,40 @@ public class BDManager implements AcessoBaseDatos {
 		}
 	}
 
-	@Override
-	public void intercambiodatos() {
-		// DE FICHERO A BASE DE DATOS
+	public boolean insertarusu(Usuarios usu) {
+		HashMap<Integer, Usuarios> listaadd = leer();
+		PreparedStatement stmt;
 		try {
-
-			BufferedReader in = new BufferedReader(new FileReader("fichero.txt"));
-			String fich;
-			while ((fich = in.readLine()) != null) {
-
-				String[] partes = fich.split(";");
-				if (notexistUser(partes[0])) {
-					System.out.println(
-							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
-
-					String query = "INSERT INTO user (db_username, db_password, db_description) value ('" + partes[0]
-							+ "','" + partes[1] + "','" + partes[2] + "')";
-					PreparedStatement stmt = conexione.prepareStatement(query);
-					stmt.executeUpdate(query);
-
-				} else {
-					System.out.println("username repetido");
+			stmt = conexione.prepareStatement("SELECT * FROM user WHERE db_username LIKE '" + usu.getUsername() + "'");
+			ResultSet rset = stmt.executeQuery();
+			while (rset.next()) {
+				for (Entry<Integer, Usuarios> entry : listaadd.entrySet()) {
+					if (entry.getValue().getUsername().equals(usu.getUsername())) {
+						System.out.println("Username repetido");
+						return false;
+					}
 				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public boolean insertarusu(Usuarios usu) {
-		HashMap<Integer, Usuarios> lista = leer();
-		String username = usu.getUsername();
-
-		PreparedStatement pstm;
-		try {
-			pstm = conexione
-					.prepareStatement("insert into user (db_username,db_password,db_description) values (?,?,?)");
-			pstm.setString(1, usu.getUsername());
-			pstm.setString(2, usu.getPassword());
-			pstm.setString(3, usu.getDescription());
-
-			pstm.executeUpdate();
+			myusername = usu.getUsername();
+			mypassword = usu.getPassword();
+			mydescription = usu.getDescription();
+			stmt = conexione.prepareStatement("insert into user (db_username,db_password,db_description) value ('"
+					+ myusername + "','" + mypassword + "','" + mydescription + "')");
+			stmt.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return true;
+
+		return false;
 	}
 
-	public void intercambiodatoslist(HashMap<Integer, Usuarios> listanueva) {
+	@Override
+	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd) {
 		deleteall();
-		for (Entry<Integer, Usuarios> entry : listanueva.entrySet()) {
-			insertarusu(listanueva.get(entry.getKey()));
+		for (Entry<Integer, Usuarios> entry : listaadd.entrySet()) {
+			insertarusu(listaadd.get(entry.getKey()));
 		}
 		System.out.println("INTERCAMBIO DE BBDD SQL CORRECTO");
 	}

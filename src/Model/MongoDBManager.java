@@ -105,19 +105,6 @@ public class MongoDBManager implements AcessoBaseDatos {
 		}
 	}
 
-	@Override
-	public void intercambiodatos() {
-		// TODO: no hace falta implementar este metodo
-	}
-
-	public void intercambiodatoslist(HashMap<Integer, Usuarios> listanueva) {
-		deleteall();
-		for (Entry<Integer, Usuarios> entry : listanueva.entrySet()) {
-			insertarusu(listanueva.get(entry.getKey()));
-		}
-		System.out.println("INTERCAMBIO DE MONGO CORRECTO");
-	}
-
 	public boolean insertarusu(Usuarios usu) {
 		HashMap<Integer, Usuarios> lista = leer();
 		String username = usu.getUsername();
@@ -128,6 +115,15 @@ public class MongoDBManager implements AcessoBaseDatos {
 		object.put("description", usu.getDescription());
 		collection.insert(object);
 		return true;
+	}
+
+	@Override
+	public void intercambiodatoslist(HashMap<Integer, Usuarios> listanueva) {
+		deleteall();
+		for (Entry<Integer, Usuarios> entry : listanueva.entrySet()) {
+			insertarusu(listanueva.get(entry.getKey()));
+		}
+		System.out.println("INTERCAMBIO DE MONGO CORRECTO");
 	}
 
 }
