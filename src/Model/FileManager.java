@@ -172,7 +172,6 @@ public class FileManager implements AcessoBaseDatos {
 
 	}
 
-	@Override
 	public void intercambiodatos() {
 		// DE BASE DE DATOS A FICHERO
 		FileWriter fichero = null;
@@ -191,6 +190,12 @@ public class FileManager implements AcessoBaseDatos {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd) {
+		// TODO:Imlements method to exchange data base
+		
 	}
 
 }

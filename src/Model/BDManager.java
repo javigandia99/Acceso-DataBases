@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.Map.Entry;
 import inferface.AcessoBaseDatos;
 import java.util.HashMap;
 import java.util.Properties;
@@ -45,8 +46,8 @@ public class BDManager implements AcessoBaseDatos {
 		String driver = "com.mysql.cj.jdbc.Driver";
 		try {
 			Class.forName(driver);
-			System.out.println("Conectando a base de datos: " + url);
 			conexione = DriverManager.getConnection(url, user, pass);
+			System.out.println("CONEXIÓN CON BBDD SQL CORRECTA");
 		} catch (ClassNotFoundException e) {
 			System.out.println("ERROR: DRIVER ");
 			System.exit(-1);
@@ -94,8 +95,6 @@ public class BDManager implements AcessoBaseDatos {
 			String query = "SELECT * FROM user";
 			PreparedStatement stmt = conexione.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
-
-			System.out.println("Query ejecutada correctamente");
 			while (rs.next()) {
 				contador++;
 				myusername = rs.getString(1);
@@ -126,8 +125,8 @@ public class BDManager implements AcessoBaseDatos {
 			mydescription = sc.nextLine();
 			// vamos a insertar un registro
 			if (notexistUser(myusername)) {
-				String query2 = "insert into user (db_username,db_password,db_description) value ('" + myusername + "','"
-						+ mypassword + "','" + mydescription + "')";
+				String query2 = "insert into user (db_username,db_password,db_description) value ('" + myusername
+						+ "','" + mypassword + "','" + mydescription + "')";
 				PreparedStatement stmt = conexione.prepareStatement(query2);
 				stmt.executeUpdate(query2);
 				System.out.println("Insert correcto!");
@@ -167,8 +166,8 @@ public class BDManager implements AcessoBaseDatos {
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
 
-					query2 = "UPDATE user set db_password =  '" + nuevopassword + "', db_description =  '" + nuevodescription
-							+ "' WHERE db_username = '" + myusername + "'";
+					query2 = "UPDATE user set db_password =  '" + nuevopassword + "', db_description =  '"
+							+ nuevodescription + "' WHERE db_username = '" + myusername + "'";
 					break;
 
 				case "password":
@@ -182,8 +181,8 @@ public class BDManager implements AcessoBaseDatos {
 				case "description":
 					System.out.println("Nueva description:");
 					nuevodescription = sc.nextLine();
-					query2 = "UPDATE user set db_description =  '" + nuevodescription + "' WHERE db_username = '" + myusername
-							+ "'";
+					query2 = "UPDATE user set db_description =  '" + nuevodescription + "' WHERE db_username = '"
+							+ myusername + "'";
 					break;
 				}
 
@@ -224,29 +223,20 @@ public class BDManager implements AcessoBaseDatos {
 
 	@Override
 	public void deleteall() {
-		System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
-		System.out.println("No habra vuelta atras...");
-		String opcion = sc.nextLine();
-		if (opcion == "si") {
+		String query = "DELETE FROM user";
+		PreparedStatement stmt;
+		try {
+			stmt = conexione.prepareStatement(query);
+			stmt.executeUpdate();
 			System.out.println("Delete ALL correcto!");
-			String query = "TRUNCATE user";
-			PreparedStatement stmt;
-			try {
-				stmt = conexione.prepareStatement(query);
-				stmt.executeUpdate();
-			} catch (SQLException e) {
-				System.err.println("Fallo en ejecutar delete all");
-				e.printStackTrace();
-			}
-
-		} else {
-			System.out.println("NO HA BORRADO NADA");
+		} catch (SQLException e) {
+			System.err.println("Fallo en ejecutar: delete all");
+			e.printStackTrace();
 		}
-
 	}
 
 	public boolean notexistUser(String user) throws SQLException {
-		String query = "SELECT username FROM user WHERE username LIKE ?";
+		String query = "SELECT username FROM user WHERE db_username LIKE ?";
 		PreparedStatement stmt = conexione.prepareStatement(query);
 		stmt.setString(1, user);
 		ResultSet rset = stmt.executeQuery();
@@ -260,33 +250,42 @@ public class BDManager implements AcessoBaseDatos {
 		}
 	}
 
-	@Override
-	public void intercambiodatos() {
-		// DE FICHERO A BASE DE DATOS
+	public boolean insertarusu(Usuarios usu) {
+		HashMap<Integer, Usuarios> listaadd = leer();
+		PreparedStatement stmt;
 		try {
-
-			BufferedReader in = new BufferedReader(new FileReader("fichero.txt"));
-			String fich;
-			while ((fich = in.readLine()) != null) {
-
-				String[] partes = fich.split(";");
-				if (notexistUser(partes[0])) {
-					System.out.println(
-							"Username: " + partes[0] + " Password: " + partes[1] + " Description: " + partes[2]);
-
-					String query = "INSERT INTO user (db_username, db_password, db_description) value ('" + partes[0] + "','"+ partes[1] + "','" + partes[2] + "')";
-					PreparedStatement stmt = conexione.prepareStatement(query);
-					stmt.executeUpdate(query);
-
-				} else {
-					System.out.println("username repetido");
+			stmt = conexione.prepareStatement("SELECT * FROM user WHERE db_username LIKE '" + usu.getUsername() + "'");
+			ResultSet rset = stmt.executeQuery();
+			while (rset.next()) {
+				for (Entry<Integer, Usuarios> entry : listaadd.entrySet()) {
+					if (entry.getValue().getUsername().equals(usu.getUsername())) {
+						System.out.println("Username repetido");
+						return false;
+					}
 				}
 			}
 
-		} catch (Exception e) {
+			myusername = usu.getUsername();
+			mypassword = usu.getPassword();
+			mydescription = usu.getDescription();
+			stmt = conexione.prepareStatement("insert into user (db_username,db_password,db_description) value ('"
+					+ myusername + "','" + mypassword + "','" + mydescription + "')");
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
+		return false;
+	}
+
+	@Override
+	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd) {
+		deleteall();
+		for (Entry<Integer, Usuarios> entry : listaadd.entrySet()) {
+			insertarusu(listaadd.get(entry.getKey()));
+		}
+		System.out.println("INTERCAMBIO DE BBDD SQL CORRECTO");
 	}
 
 }

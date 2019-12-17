@@ -16,6 +16,6 @@ public interface AcessoBaseDatos {
 
 	public void deleteall();
 
-	public void intercambiodatos();
+	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd);
 
 }
