@@ -12,11 +12,11 @@ public interface I_Acceso_A_Datos {
 	
 	public boolean insertusu(Users newUsu);
 
-	public void update(String up_username);
+	public boolean update(String up_username,String newPassword,String newDescription);
 
-	public boolean deleteuno(String del_username);
+	public boolean deleteone(String del_username);
 
-	public boolean deleteall();
+	public boolean deleteall(String option);
 
 	public void intercambiodatoslist(HashMap<Integer, Users> newList);
 

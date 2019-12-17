@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import inferface.AcessoBaseDatos;
+import inferface.I_Acceso_A_Datos;
 
-public class FileManager implements AcessoBaseDatos {
+public class FileManager implements I_Acceso_A_Datos {
 
 	private Scanner sc = new Scanner(System.in);
-	protected HashMap<Integer, Usuarios> listadofile = new HashMap<Integer, Usuarios>();
+	protected HashMap<Integer, Users> listadofile = new HashMap<Integer, Users>();
 	protected BufferedReader in;
 	private FileWriter ficherowriter;
 	private PrintWriter pw;
@@ -29,8 +29,8 @@ public class FileManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public HashMap<Integer, Usuarios> leer() {
-		Usuarios usu;
+	public HashMap<Integer, Users> leer() {
+		Users usu;
 		int contador = 0;
 
 		try {
@@ -41,7 +41,7 @@ public class FileManager implements AcessoBaseDatos {
 				myusername = partes[0];
 				mypassword = partes[1];
 				mydescription = partes[2];
-				usu = new Usuarios(myusername, mypassword, mydescription);
+				usu = new Users(myusername, mypassword, mydescription);
 				listadofile.put(contador, usu);
 			}
 
@@ -82,120 +82,90 @@ public class FileManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void update() {
+	public boolean update(String up_username, String newPassword, String newDescription) {
+		boolean state = false;
 		try {
 			in = new BufferedReader(new FileReader("fichero.txt"));
 			String fichero;
-			System.out.println("Introduce username: ");
-			myusername = sc.nextLine();
 			while ((fichero = in.readLine()) != null) {
 
-				if (fichero.contains(myusername)) {
+				if (fichero.contains(up_username)) {
 					System.out.println("esta en  el fichero");
+					//Nom implementado
 
-					System.out.println("Que quiere cambiar del username: " + myusername);
-					System.out.println("todo - passsword - description - nada");
-					String posibilidad = sc.nextLine();
+					System.out.println("Cambiado: " + up_username + "ahora el nuevo password es" + newPassword
+							+ "y la nueva description es" + newDescription);
 
-					switch (posibilidad) {
-					case "todo":
-						System.out.println("nuevo password: ");
-
-						System.out.println("nueva description: ");
-						break;
-
-					case "password":
-						System.out.println("nuevo password: ");
-
-						break;
-
-					case "description":
-						System.out.println("nueva description: ");
-
-						break;
-
-					case "nada":
-						// Salida del switch
-						break;
-					}
+					state = true;
 				}
 
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			state = false;
 		}
-
+		return state;
 	}
 
 	@Override
-	public void deleteuno() {
-
+	public boolean deleteone(String del_username) {
+		boolean state = false;
 		try {
 			in = new BufferedReader(new FileReader("fichero.txt"));
 			fichero = null;
-			System.out.println("Introduce un username para borrar:");
-			myusername = sc.nextLine();
 			while ((fichero = in.readLine()) != null) {
-				if (fichero.contains(myusername)) {
-					System.out.println("Borrando...");
-
+				if (fichero.contains(del_username)) {
+					System.out.println("Delete one no implement");
+					state = true;
 				} else {
 					System.out.println("No existe el usuario escrito");
+					state = false;
 				}
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-
+		return state;
 	}
 
 	@Override
-	public void deleteall() {
+	public boolean deleteall(String option) {
+		boolean state = false;
 		try {
 			ficherowriter = new FileWriter("fichero.txt", false);
 
 			pw = new PrintWriter(ficherowriter);
-			System.out.println("¿Estas seguro de borrar todo el contenido del fichero?");
-			System.out.println("No habra vuelta atras...");
 
-			String opcion = sc.nextLine();
-			if (opcion == "si") {
+			if (option.equalsIgnoreCase("si")) {
 				pw.write("");
 				System.out.println("Todo el fichero ha sido borrado");
+				state = true;
 			} else {
 				System.out.println("NO HA BORRADO NADA");
+				state = false;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
 
+		}
+		return state;
 	}
 
-	public void intercambiodatos() {
-		// DE BASE DE DATOS A FICHERO
-		FileWriter fichero = null;
-		PrintWriter pw = null;
-		try {
-			fichero = new FileWriter("fichero.txt", true);
-
-			pw = new PrintWriter(fichero);
-			HashMap<Integer, Usuarios> listado = leer();
-			Iterator<Entry<Integer, Usuarios>> it = listado.entrySet().iterator();
-			while (it.hasNext()) {
-				String contenido = it.next().getValue().tofichero();
-				pw.print(contenido);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+	@Override
+	public void intercambiodatoslist(HashMap<Integer, Users> newList) {
+		deleteall("si");
+		for (Entry<Integer, Users> entry : newList.entrySet()) {
+			insertusu(newList.get(entry.getKey()));
 		}
+		System.out.println("INTERCAMBIO DE FILE CORRECTO");
 
 	}
 
 	@Override
-	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd) {
-		// TODO:Imlements method to exchange data base
-		
+	public boolean insertusu(Users newUsu) {
+		System.out.println("No implementado");
+		return false;
 	}
 
 }

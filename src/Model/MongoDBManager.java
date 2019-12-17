@@ -4,18 +4,19 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Map.Entry;
 import com.mongodb.*;
-import inferface.AcessoBaseDatos;
+import inferface.I_Acceso_A_Datos;
 
-public class MongoDBManager implements AcessoBaseDatos {
+public class MongoDBManager implements I_Acceso_A_Datos {
 	private MongoClient mongo;
 	private DB database;
 	private DBCollection collection;
 	private BasicDBObject object;
-	protected HashMap<Integer, Usuarios> listadomongo;
+	protected HashMap<Integer, Users> listadomongo;
 	private Scanner sc;
 
 	@SuppressWarnings("deprecation")
 	public MongoDBManager() {
+		sc = new Scanner(System.in);
 		try {
 			mongo = new MongoClient("localhost", 27017);
 			database = mongo.getDB("db_users");
@@ -28,9 +29,9 @@ public class MongoDBManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public HashMap<Integer, Usuarios> leer() {
-		listadomongo = new HashMap<Integer, Usuarios>();
-		Usuarios usu;
+	public HashMap<Integer, Users> leer() {
+		listadomongo = new HashMap<Integer, Users>();
+		Users usu;
 		DBCursor cursor = collection.find();
 		int contador = 0;
 		String username = null;
@@ -43,7 +44,7 @@ public class MongoDBManager implements AcessoBaseDatos {
 				password = (String) doc.get("password");
 				description = (String) doc.get("description");
 
-				usu = new Usuarios(username, password, description);
+				usu = new Users(username, password, description);
 				listadomongo.put(contador, usu);
 			}
 
@@ -73,55 +74,67 @@ public class MongoDBManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void update() {
-		System.out.println("Introduce que username quiere cambiar:");
-		BasicDBObject searchQuery = new BasicDBObject().append("username", sc.nextLine());
+	public boolean update(String up_username,String newPassword,String newDescription) {
+		boolean state = false;
+		
+		BasicDBObject searchQuery = new BasicDBObject().append("username", up_username);
 		BasicDBObject obupdate = new BasicDBObject();
 		System.out.println("Nuevo Password:");
-		obupdate.append("$set", new BasicDBObject().append("password", sc.nextLine()));
+		obupdate.append("$set", new BasicDBObject().append("password", newPassword));
 		System.out.println("Nueva Description:");
-		obupdate.append("$set", new BasicDBObject().append("description", sc.nextLine()));
+		obupdate.append("$set", new BasicDBObject().append("description",newDescription));
 		collection.update(searchQuery, obupdate);
 		System.out.println("UPDATE CORRECTO");
-
+return state;
 	}
 
 	@Override
-	public void deleteuno() {
-		sc = new Scanner(System.in);
+	public boolean deleteone(String del_username) {
+		boolean state = false;
 		object = new BasicDBObject();
-		String delete_username = sc.nextLine();
-		object.put("username", delete_username);
-		collection.remove(object);
-		System.out.println("DELETE: " + delete_username + " CORRECTO ");
-
+		if (del_username != null) {
+			object.put("username", del_username);
+			collection.remove(object);
+			System.out.println("DELETE: " + del_username + " CORRECTO ");
+			state = true;
+		}
+		return state;
 	}
 
 	@Override
-	public void deleteall() {
-		DBCursor cursor = collection.find();
-		while (cursor.hasNext()) {
-			collection.remove(cursor.next());
+	public boolean deleteall(String option) {
+		boolean state = false;
+		if (option.equalsIgnoreCase("si")) {
+
+			DBCursor cursor = collection.find();
+			if (cursor != null) {
+				while (cursor.hasNext()) {
+					collection.remove(cursor.next());
+				}
+				state = true;
+			}
 		}
+		return state;
 	}
 
-	public boolean insertarusu(Usuarios usu) {
-		HashMap<Integer, Usuarios> lista = leer();
-		String username = usu.getUsername();
+	@Override
+	public boolean insertusu(Users newUsu) {
+		HashMap<Integer, Users> lista = leer();
+		String username = newUsu.getUsername();
 
 		object = new BasicDBObject();
 		object.put("username", username);
-		object.put("password", usu.getPassword());
-		object.put("description", usu.getDescription());
+		object.put("password", newUsu.getPassword());
+		object.put("description", newUsu.getDescription());
 		collection.insert(object);
 		return true;
 	}
 
 	@Override
-	public void intercambiodatoslist(HashMap<Integer, Usuarios> listanueva) {
-		deleteall();
-		for (Entry<Integer, Usuarios> entry : listanueva.entrySet()) {
-			insertarusu(listanueva.get(entry.getKey()));
+	public void intercambiodatoslist(HashMap<Integer, Users> newList) {
+		deleteall("si");
+		for (Entry<Integer, Users> entry : newList.entrySet()) {
+			insertusu(newList.get(entry.getKey()));
 		}
 		System.out.println("INTERCAMBIO DE MONGO CORRECTO");
 	}

@@ -15,11 +15,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.Map.Entry;
-import inferface.AcessoBaseDatos;
+import inferface.I_Acceso_A_Datos;
 import java.util.HashMap;
 import java.util.Properties;
 
-public class BDManager implements AcessoBaseDatos {
+public class BDManager implements I_Acceso_A_Datos {
 
 	private Connection conexione;
 	private File config;
@@ -27,7 +27,7 @@ public class BDManager implements AcessoBaseDatos {
 	private InputStream input;
 	private OutputStream output;
 	private Scanner sc;
-	protected HashMap<Integer, Usuarios> listadobd;
+	protected HashMap<Integer, Users> listadobd;
 	private String myusername;
 	private String mypassword;
 	private String mydescription;
@@ -87,9 +87,9 @@ public class BDManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public HashMap<Integer, Usuarios> leer() {
-		listadobd = new HashMap<Integer, Usuarios>();
-		Usuarios usu;
+	public HashMap<Integer, Users> leer() {
+		listadobd = new HashMap<Integer, Users>();
+		Users usu;
 		int contador = 0;
 		try {
 			String query = "SELECT * FROM user";
@@ -100,7 +100,7 @@ public class BDManager implements AcessoBaseDatos {
 				myusername = rs.getString(1);
 				mypassword = rs.getString(2);
 				mydescription = rs.getString(3);
-				usu = new Usuarios(myusername, mypassword, mydescription);
+				usu = new Users(myusername, mypassword, mydescription);
 				listadobd.put(contador, usu);
 			}
 
@@ -141,71 +141,37 @@ public class BDManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void update() {
+	public boolean update(String up_username, String newPassword, String newDescription) {
+		boolean state = false;
 		try {
-
-			sc = new Scanner(System.in);
-			System.out.println("introduce un username: ");
-			myusername = sc.nextLine();
-			// vamos a modificar un registro
-			if (notexistUser(myusername)) {
+			if (notexistUser(up_username)) {
 				System.out.println("USERNAME NO EXISTE");
-
-			} else {
-
-				System.out.println("Introduce que quieres modificar: todo   password    description");
-				String posibilidad = sc.nextLine();
-				String query2 = null;
-				String nuevopassword = null;
-				String nuevodescription = null;
-				switch (posibilidad) {
-				case "todo":
-					System.out.println("El username NUNCA se va a poder Modificar");
-					System.out.println("Nuevo password:");
-					nuevopassword = sc.nextLine();
-					System.out.println("Nueva description:");
-					nuevodescription = sc.nextLine();
-
-					query2 = "UPDATE user set db_password =  '" + nuevopassword + "', db_description =  '"
-							+ nuevodescription + "' WHERE db_username = '" + myusername + "'";
-					break;
-
-				case "password":
-
-					System.out.println("Nuevo password:");
-					nuevopassword = sc.nextLine();
-					query2 = "UPDATE user set db_password =  '" + nuevopassword + "' WHERE db_username = '" + myusername
-							+ "'";
-					break;
-
-				case "description":
-					System.out.println("Nueva description:");
-					nuevodescription = sc.nextLine();
-					query2 = "UPDATE user set db_description =  '" + nuevodescription + "' WHERE db_username = '"
-							+ myusername + "'";
-					break;
-				}
-
-				PreparedStatement stmt = conexione.prepareStatement(query2);
-				stmt.executeUpdate(query2);
-				System.out.println("Update correcto!");
+				state = false;
 			}
+			System.out.println("El username NUNCA se va a poder Modificar");
+
+			String query2 = "UPDATE user set db_password =  '" + newPassword + "', db_description =  '" + newDescription
+					+ "' WHERE db_username = '" + myusername + "'";
+
+			PreparedStatement stmt = conexione.prepareStatement(query2);
+			stmt.executeUpdate(query2);
+			System.out.println("Update correcto!");
+			state = true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
+		return state;
 	}
 
 	@Override
-	public void deleteuno() {
+	public boolean deleteone(String del_username) {
+		boolean state = false;
 		try {
 
-			sc = new Scanner(System.in);
-			System.out.println("Introduce un username para borrar:");
-			myusername = sc.nextLine();
-			if (notexistUser(myusername)) {
+			if (notexistUser(del_username)) {
 				System.out.println("No existe el usuario escrito");
+				return false;
 			} else {
 				System.out.println("Borrando...");
 				String query = "DELETE FROM user WHERE db_username LIKE ('" + myusername + "')";
@@ -213,26 +179,34 @@ public class BDManager implements AcessoBaseDatos {
 				stmt.executeUpdate();
 				System.out.println("Delete correcto!");
 				stmt.close();
+				state = true;
 			}
 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-
+		return state;
 	}
 
 	@Override
-	public void deleteall() {
-		String query = "DELETE FROM user";
-		PreparedStatement stmt;
-		try {
-			stmt = conexione.prepareStatement(query);
-			stmt.executeUpdate();
-			System.out.println("Delete ALL correcto!");
-		} catch (SQLException e) {
-			System.err.println("Fallo en ejecutar: delete all");
-			e.printStackTrace();
+	public boolean deleteall(String option) {
+		boolean state = false;
+		if (option.equalsIgnoreCase("si")) {
+
+			String query = "DELETE FROM user";
+			PreparedStatement stmt;
+			try {
+				stmt = conexione.prepareStatement(query);
+				stmt.executeUpdate();
+				System.out.println("Delete ALL correcto!");
+				state = true;
+			} catch (SQLException e) {
+				System.err.println("Fallo en ejecutar: delete all");
+				e.printStackTrace();
+				state = false;
+			}
 		}
+		return state;
 	}
 
 	public boolean notexistUser(String user) throws SQLException {
@@ -250,14 +224,15 @@ public class BDManager implements AcessoBaseDatos {
 		}
 	}
 
-	public boolean insertarusu(Usuarios usu) {
-		HashMap<Integer, Usuarios> listaadd = leer();
+	@Override
+	public boolean insertusu(Users usu) {
+		HashMap<Integer, Users> listaadd = leer();
 		PreparedStatement stmt;
 		try {
 			stmt = conexione.prepareStatement("SELECT * FROM user WHERE db_username LIKE '" + usu.getUsername() + "'");
 			ResultSet rset = stmt.executeQuery();
 			while (rset.next()) {
-				for (Entry<Integer, Usuarios> entry : listaadd.entrySet()) {
+				for (Entry<Integer, Users> entry : listaadd.entrySet()) {
 					if (entry.getValue().getUsername().equals(usu.getUsername())) {
 						System.out.println("Username repetido");
 						return false;
@@ -280,10 +255,10 @@ public class BDManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd) {
-		deleteall();
-		for (Entry<Integer, Usuarios> entry : listaadd.entrySet()) {
-			insertarusu(listaadd.get(entry.getKey()));
+	public void intercambiodatoslist(HashMap<Integer, Users> newList) {
+		deleteall("si");
+		for (Entry<Integer, Users> entry : newList.entrySet()) {
+			insertusu(newList.get(entry.getKey()));
 		}
 		System.out.println("INTERCAMBIO DE BBDD SQL CORRECTO");
 	}

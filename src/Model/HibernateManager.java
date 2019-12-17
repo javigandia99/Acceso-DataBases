@@ -12,14 +12,14 @@ import java.util.Map.Entry;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import inferface.AcessoBaseDatos;
+import inferface.I_Acceso_A_Datos;
 import java.util.logging.*;
 
 @SuppressWarnings("deprecation")
-public class HibernateManager implements AcessoBaseDatos {
-	Usuarios usu;
+public class HibernateManager implements I_Acceso_A_Datos {
+	Users usu;
 	Session session;
-	protected HashMap<Integer, Usuarios> listadohm;
+	protected HashMap<Integer, Users> listadohm;
 	Scanner sc = new Scanner(System.in);
 	String myusername;
 
@@ -31,17 +31,17 @@ public class HibernateManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public HashMap<Integer, Usuarios> leer() {
+	public HashMap<Integer, Users> leer() {
 
-		listadohm = new HashMap<Integer, Usuarios>();
+		listadohm = new HashMap<Integer, Users>();
 		System.out.println("Leyendo...");
-		Query q = session.createQuery("select u from Usuarios u");
-		List<Entry<Integer, Usuarios>> results = q.list();
+		Query q = session.createQuery("select u from Users u");
+		List<Entry<Integer, Users>> results = q.list();
 
-		Iterator<Entry<Integer, Usuarios>> it = results.iterator();
+		Iterator<Entry<Integer, Users>> it = results.iterator();
 		int contador = 0;
 		while (it.hasNext()) {
-			Usuarios usu = (Usuarios) it.next();
+			Users usu = (Users) it.next();
 			contador++;
 			listadohm.put(contador, usu);
 		}
@@ -51,7 +51,7 @@ public class HibernateManager implements AcessoBaseDatos {
 
 	@Override
 	public void insert() {
-		usu = new Usuarios();
+		usu = new Users();
 		usu.setUsername(sc.nextLine());
 		usu.setPassword(sc.nextLine());
 		usu.setDescription(sc.nextLine());
@@ -63,35 +63,38 @@ public class HibernateManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void update() {
+	public boolean update(String up_username, String newPassword, String newDescription) {
+		boolean state = false;
 		try {
-			System.out.println("introduce un username: ");
-			usu = (Usuarios) session.load(Usuarios.class, sc.nextLine());
+			usu = (Users) session.load(Users.class, up_username);
 			System.out.println(usu);
 			Hibernate.initialize(usu);
-			System.out.println("introduce password nuevo");
-			usu.setPassword(sc.nextLine());
-			System.out.println("introduce description");
-			usu.setDescription(sc.nextLine());
+
+			usu.setPassword(newPassword);
+			usu.setDescription(newDescription);
+
 			session.beginTransaction();
 			session.update(usu);
 			session.getTransaction().commit();
+
 			System.out.println("UPDATE CORRECTO");
+			state = true;
 
 		} catch (Exception e) {
-
+			state = false;
 			e.printStackTrace();
 
 		}
-
+		return state;
 	}
 
 	@Override
-	public void deleteuno() {
+	public boolean deleteone(String del_username) {
+		boolean state = false;
 		try {
 			session.beginTransaction();
 			System.out.println("Introduce un username para borrar:");
-			usu = (Usuarios) session.get(Usuarios.class, sc.nextLine());
+			usu = (Users) session.get(Users.class, sc.nextLine());
 
 			if (usu != null) {
 				session.delete(usu);
@@ -102,25 +105,37 @@ public class HibernateManager implements AcessoBaseDatos {
 
 			session.getTransaction().commit();
 			System.out.println("Fin Borrado");
+			state = true;
 		} catch (Exception e) {
 			if (session.getTransaction() != null) {
 				session.getTransaction().rollback();
+				state = false;
 			}
 			e.printStackTrace();
 		}
+		return state;
 	}
 
 	@Override
-	public void deleteall() {
-		session.beginTransaction();
-		Query q = session.createQuery("DELETE FROM Usuarios");
-		q.executeUpdate();
-		System.out.println("Borrado CORRECTAMENTE");
-		session.getTransaction().commit();
-		System.out.println("Fin Borrado");
+	public boolean deleteall(String option) {
+		boolean state = false;
+		if (option.equalsIgnoreCase("si")) {
 
-		listadohm.clear();
-
+			try {
+				session.beginTransaction();
+				Query q = session.createQuery("DELETE FROM Users");
+				q.executeUpdate();
+				System.out.println("Borrado CORRECTAMENTE");
+				session.getTransaction().commit();
+				System.out.println("Fin Borrado");
+				listadohm.clear();
+				state = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				state = false;
+			}
+		}
+		return state;
 	}
 
 	public void intercambiodatos() {
@@ -133,7 +148,7 @@ public class HibernateManager implements AcessoBaseDatos {
 				String[] partes = fich.split(";");
 				if (notexistUser(partes[0])) {
 
-					usu = new Usuarios();
+					usu = new Users();
 					usu.setUsername(partes[0]);
 					usu.setPassword(partes[1]);
 					usu.setDescription(partes[2]);
@@ -156,9 +171,9 @@ public class HibernateManager implements AcessoBaseDatos {
 	}
 
 	public boolean notexistUser(String user) throws SQLException {
-		Query q = session.createQuery("select u from Usuarios u");
+		Query q = session.createQuery("select u from Users u");
 		List results = q.list();
-		Iterator<Entry<Integer, Usuarios>> it = results.iterator();
+		Iterator<Entry<Integer, Users>> it = results.iterator();
 		int contador = 0;
 		boolean exist = it.hasNext();
 		if (exist) {
@@ -169,9 +184,19 @@ public class HibernateManager implements AcessoBaseDatos {
 	}
 
 	@Override
-	public void intercambiodatoslist(HashMap<Integer, Usuarios> listaadd) {
-		// TODO:Imlements method to exchange data base
+	public void intercambiodatoslist(HashMap<Integer, Users> newList) {
+		deleteall("si");
+		for (Entry<Integer, Users> entry : newList.entrySet()) {
+			insertusu(newList.get(entry.getKey()));
+		}
+		System.out.println("INTERCAMBIO DE FILE CORRECTO");
 
+	}
+
+	@Override
+	public boolean insertusu(Users newUsu) {
+		System.out.println("No implementado Insert usu");
+		return false;
 	}
 
 }
