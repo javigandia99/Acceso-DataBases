@@ -1,16 +1,16 @@
 package Model;
 
-public class Usuarios {
+public class Users {
 
 	protected String username;
 	protected String password;
 	protected String description;
 
-	public Usuarios() {
+	public Users() {
 
 	}
 
-	public Usuarios(String username, String password, String description) {
+	public Users(String username, String password, String description) {
 		this.username = username;
 		this.password = password;
 		this.description = description;
