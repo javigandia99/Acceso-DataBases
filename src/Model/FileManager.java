@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import inferface.I_Acceso_A_Datos;
@@ -54,7 +53,6 @@ public class FileManager implements I_Acceso_A_Datos {
 		return listadofile;
 	}
 
-	@Override
 	public void insert() {
 		try {
 			ficherowriter = new FileWriter("fichero.txt", true);
@@ -91,7 +89,7 @@ public class FileManager implements I_Acceso_A_Datos {
 
 				if (fichero.contains(up_username)) {
 					System.out.println("esta en  el fichero");
-					//Nom implementado
+					// Nom implementado
 
 					System.out.println("Cambiado: " + up_username + "ahora el nuevo password es" + newPassword
 							+ "y la nueva description es" + newDescription);

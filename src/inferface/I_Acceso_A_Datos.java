@@ -7,8 +7,6 @@ import Model.Users;
 public interface I_Acceso_A_Datos {
 
 	public HashMap<Integer, Users> leer();
-
-	public void insert();
 	
 	public boolean insertusu(Users newUsu);
 

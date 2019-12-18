@@ -1,10 +1,8 @@
 package Model;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -112,7 +110,6 @@ public class BDManager implements I_Acceso_A_Datos {
 
 	}
 
-	@Override
 	public void insert() {
 		try {
 			sc = new Scanner(System.in);

@@ -10,13 +10,11 @@ public class MongoDBManager implements I_Acceso_A_Datos {
 	private MongoClient mongo;
 	private DB database;
 	private DBCollection collection;
-	private BasicDBObject object;
+	private BasicDBObject objUser;
 	protected HashMap<Integer, Users> listadomongo;
-	private Scanner sc;
 
 	@SuppressWarnings("deprecation")
 	public MongoDBManager() {
-		sc = new Scanner(System.in);
 		try {
 			mongo = new MongoClient("localhost", 27017);
 			database = mongo.getDB("db_users");
@@ -53,24 +51,16 @@ public class MongoDBManager implements I_Acceso_A_Datos {
 		}
 		return listadomongo;
 	}
-
+	
 	@Override
-	public void insert() {
-		// INSERT
-		object = new BasicDBObject();
-		sc = new Scanner(System.in);
+	public boolean insertusu(Users newUsu) {
 
-		System.out.println("Introduce nuevo username:");
-		object.put("username", sc.nextLine());
-
-		System.out.println("Introduce nuevo password:");
-		object.put("password", sc.nextLine());
-
-		System.out.println("Introduce nuevo description:");
-		object.put("description", sc.nextLine());
-
-		collection.insert(object);
-		System.out.println("INSERT CORRECTO");
+		objUser = new BasicDBObject();
+		objUser.put("username", newUsu.getUsername());
+		objUser.put("password", newUsu.getPassword());
+		objUser.put("description", newUsu.getDescription());
+		collection.insert(objUser);
+		return true;
 	}
 
 	@Override
@@ -91,10 +81,10 @@ return state;
 	@Override
 	public boolean deleteone(String del_username) {
 		boolean state = false;
-		object = new BasicDBObject();
+		objUser = new BasicDBObject();
 		if (del_username != null) {
-			object.put("username", del_username);
-			collection.remove(object);
+			objUser.put("username", del_username);
+			collection.remove(objUser);
 			System.out.println("DELETE: " + del_username + " CORRECTO ");
 			state = true;
 		}
@@ -115,19 +105,6 @@ return state;
 			}
 		}
 		return state;
-	}
-
-	@Override
-	public boolean insertusu(Users newUsu) {
-		HashMap<Integer, Users> lista = leer();
-		String username = newUsu.getUsername();
-
-		object = new BasicDBObject();
-		object.put("username", username);
-		object.put("password", newUsu.getPassword());
-		object.put("description", newUsu.getDescription());
-		collection.insert(object);
-		return true;
 	}
 
 	@Override

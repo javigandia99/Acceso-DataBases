@@ -30,6 +30,7 @@ public class HibernateManager implements I_Acceso_A_Datos {
 
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public HashMap<Integer, Users> leer() {
 
@@ -50,16 +51,26 @@ public class HibernateManager implements I_Acceso_A_Datos {
 	}
 
 	@Override
-	public void insert() {
-		usu = new Users();
-		usu.setUsername(sc.nextLine());
-		usu.setPassword(sc.nextLine());
-		usu.setDescription(sc.nextLine());
-		session.beginTransaction();
-		session.save(usu);
-		session.getTransaction().commit();
-		System.out.println("Fin Inserción Masiva");
+	public boolean insertusu(Users newUsu) {
+		boolean state = false;
+		try {
+			usu = new Users();
+			usu.setUsername(newUsu.getUsername());
+			usu.setPassword(newUsu.getPassword());
+			usu.setDescription(newUsu.getDescription());
+			session.beginTransaction();
+			session.save(usu);
+			session.getTransaction().commit();
+			state = true;
 
+		} catch (Exception e) {
+			if (session.getTransaction() != null) {
+				session.getTransaction().rollback();
+				state = false;
+			}
+			e.printStackTrace();
+		}
+		return state;
 	}
 
 	@Override
@@ -81,7 +92,10 @@ public class HibernateManager implements I_Acceso_A_Datos {
 			state = true;
 
 		} catch (Exception e) {
-			state = false;
+			if (session.getTransaction() != null) {
+				session.getTransaction().rollback();
+				state = false;
+			}
 			e.printStackTrace();
 
 		}
@@ -116,6 +130,7 @@ public class HibernateManager implements I_Acceso_A_Datos {
 		return state;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean deleteall(String option) {
 		boolean state = false;
@@ -131,8 +146,11 @@ public class HibernateManager implements I_Acceso_A_Datos {
 				listadohm.clear();
 				state = true;
 			} catch (Exception e) {
+				if (session.getTransaction() != null) {
+					session.getTransaction().rollback();
+					state = false;
+				}
 				e.printStackTrace();
-				state = false;
 			}
 		}
 		return state;
@@ -161,7 +179,7 @@ public class HibernateManager implements I_Acceso_A_Datos {
 					System.out.println("username '" + partes[0] + "' repetido");
 				}
 			}
-
+			in.close();
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
@@ -170,11 +188,11 @@ public class HibernateManager implements I_Acceso_A_Datos {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public boolean notexistUser(String user) throws SQLException {
 		Query q = session.createQuery("select u from Users u");
 		List results = q.list();
 		Iterator<Entry<Integer, Users>> it = results.iterator();
-		int contador = 0;
 		boolean exist = it.hasNext();
 		if (exist) {
 			return true;
@@ -191,12 +209,6 @@ public class HibernateManager implements I_Acceso_A_Datos {
 		}
 		System.out.println("INTERCAMBIO DE FILE CORRECTO");
 
-	}
-
-	@Override
-	public boolean insertusu(Users newUsu) {
-		System.out.println("No implementado Insert usu");
-		return false;
 	}
 
 }
