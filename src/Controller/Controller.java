@@ -295,9 +295,9 @@ public class Controller {
 				System.out.println("Nuevo username: ");
 				sc.nextLine();
 				newUsername = sc.nextLine();
-				System.out.println("Nuevo password para " + newUsername + ": ");
+				System.out.println("Password para " + newUsername + ": ");
 				newPassword = sc.nextLine();
-				System.out.println("Nueva description: ");
+				System.out.println("Description: ");
 				newDescription = sc.nextLine();
 				ususs.setUsername(newUsername);
 				ususs.setPassword(newPassword);
@@ -316,7 +316,7 @@ public class Controller {
 				String up_username = sc.nextLine();
 				System.out.println("nuevo password para " + up_username + ": ");
 				newPassword = sc.nextLine();
-				System.out.println("nueva description para \"+up_username+\": ");
+				System.out.println("nueva description para "+up_username+": ");
 				newDescription = sc.nextLine();
 				phpjson.update(up_username, newPassword, newDescription);
 				break;

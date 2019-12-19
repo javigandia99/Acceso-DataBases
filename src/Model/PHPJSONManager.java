@@ -140,46 +140,40 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 		objUser = new JSONObject();
 		objRequest = new JSONObject();
 		try {
-
+			objUser.put("username", up_username);
 			objUser.put("password", newPassword);
 			objUser.put("description", newDescription);
 
-			objRequest.put("request", "add");
-			objRequest.put("userAdd", objUser);
+			objRequest.put("request", "upd");
+			objRequest.put("userUpd", objUser);
 			String json = objRequest.toJSONString();
 
-			System.out.println("Lanzamos peticion JSON para almacenar un jugador");
-
 			String url = SERVER_PATH + SET_insert_USUARIO;
-
-			System.out.println("La url a la que lanzamos la peticiÛn es " + url);
-			System.out.println("El json que enviamos es: ");
-			System.out.println(json);
-			// System.exit(-1);
+			
+		//	System.out.println("El json que enviamos es: ");
+			//System.out.println(json);
 
 			String response = encargadoPeticiones.postRequest(url, json);
 
-			System.out.println("El json que recibimos es: ");
+			//System.out.println("El json que recibimos es: ");
 
-			System.out.println(response); // Traza para pruebas
-			// System.exit(-1);
+			//System.out.println(response); 
 
 			// Parseamos la respuesta y la convertimos en un JSONObject
 
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
 
-			if (respuesta == null) { // Si hay alg˙n error de parseo (json
-										// incorrecto porque hay alg˙n caracter
-										// raro, etc.) la respuesta ser· null
+			if (respuesta == null) { 
 				System.out.println("El json recibido no es correcto. Finaliza la ejecuciÛn");
 				System.exit(-1);
+				
 			} else { // El JSON recibido es correcto
 
-				// Sera "ok" si todo ha ido bien o "error" si hay alg˙n problema
-				String estado = (String) respuesta.get("estado");
-				if (estado.equals("ok")) {
+				// Sera "ok" si todo ha ido bien o "error" si hay algun problema
+				String stateJSON = (String) respuesta.get("state");
+				if (stateJSON.equals("ok")) {
 
-					System.out.println("Almacenado jugador enviado por JSON Remoto");
+					System.out.println("Almacenado "+up_username+" con los nuevos registros introducidos");
 
 				} else { // Hemos recibido el json pero en el estado se nos
 							// indica que ha habido alg˙n error
