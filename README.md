@@ -8,4 +8,4 @@
 | ✔ Update | ❌ Update | ✔ Update | ✔ Update | ✔ Update | 
 | ✔ Delete One| ❌ Delete One| ✔ Delete One| ✔ Delete One| ✔ Delete One |
 | ✔ Delete All | ✔ Delete All | ✔ Delete All | ✔ Delete All | ✔ Delete All |
-| ✔ Data exchange | ✔ Data exchange | ✔ Data exchange | ✔ Data exchange | ✔ Data exchange | 
+| ✔ Data exchange | ❌ Data exchange | ✔ Data exchange | ✔ Data exchange | ✔ Data exchange | 
