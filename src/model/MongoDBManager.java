@@ -51,7 +51,7 @@ public class MongoDBManager implements I_Acceso_A_Datos {
 		}
 		return listadomongo;
 	}
-	
+
 	@Override
 	public boolean insertusu(Users newUsu) {
 
@@ -64,18 +64,18 @@ public class MongoDBManager implements I_Acceso_A_Datos {
 	}
 
 	@Override
-	public boolean update(String up_username,String newPassword,String newDescription) {
+	public boolean update(String up_username, String newPassword, String newDescription) {
 		boolean state = false;
-		
+
 		BasicDBObject searchQuery = new BasicDBObject().append("username", up_username);
 		BasicDBObject obupdate = new BasicDBObject();
 		System.out.println("Nuevo Password:");
 		obupdate.append("$set", new BasicDBObject().append("password", newPassword));
 		System.out.println("Nueva Description:");
-		obupdate.append("$set", new BasicDBObject().append("description",newDescription));
+		obupdate.append("$set", new BasicDBObject().append("description", newDescription));
 		collection.update(searchQuery, obupdate);
 		System.out.println("UPDATE CORRECTO");
-return state;
+		return state;
 	}
 
 	@Override
