@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <class name="Model.Users" table="user">
+  <id name="username" type="string">
+   <column name="db_username"/>
+  </id>
+  <property generated="never" lazy="false" name="password" type="string">
+   <column length="20" name="db_password" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="description" type="string">
+   <column length="25" name="db_description" not-null="true"/>
+  </property>
+ </class>
+</hibernate-mapping>
