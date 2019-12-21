@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -10,7 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import Auxiliares.ApiRequests;
+import auxiliar.ApiRequests;
 import inferface.I_Acceso_A_Datos;
 
 public class PHPJSONManager implements I_Acceso_A_Datos {
@@ -87,27 +87,24 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 			objRequest.put("userAdd", objUser);
 			String json = objRequest.toJSONString();
 
-			System.out.println("Lanzamos peticion JSON para almacenar un jugador");
-
 			String url = SERVER_PATH + SET_insert_USUARIO;
 
-			System.out.println("La url a la que lanzamos la peticiÛn es " + url);
-			System.out.println("El json que enviamos es: ");
-			System.out.println(json);
+			// System.out.println("La url a la que lanzamos la peticiÛn es " + url);
+			// System.out.println("El json que enviamos es: ");
+			// System.out.println(json);
 
 			String response = encargadoPeticiones.postRequest(url, json);
 
-			System.out.println("El json que recibimos es: ");
+			// System.out.println("El json que recibimos es: ");
 
-			System.out.println(response); // Traza para pruebas
+			// System.out.println(response);
+
 			// Parseamos la respuesta y la convertimos en un JSONObject
-
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
 
 			if (respuesta == null) {
-				// Si hay algun error de parseo (json incorrecto porque hay algun caracter raro,
-				// etc.) la respuesta ser· null
 				System.out.println("El json recibido no es correcto. Finaliza la ejecucion");
+				System.exit(0);
 			} else { // El JSON recibido es correcto
 
 				String stateJSON = (String) respuesta.get("state");
@@ -116,8 +113,8 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 					state = true;
 					System.out.println("Insertado");
 
-				} else { // Hemos recibido el json pero en el state se nos
-							// indica que ha habido alg˙n error
+				} else { // Hemos recibido el json pero en el state nos
+							// indica que ha habido algun error
 
 					System.out.println("Acceso JSON REMOTO - Error al almacenar los datos");
 					System.out.println("Error: " + (String) respuesta.get("error"));
@@ -149,34 +146,32 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 			String json = objRequest.toJSONString();
 
 			String url = SERVER_PATH + SET_insert_USUARIO;
-			
-		//	System.out.println("El json que enviamos es: ");
-			//System.out.println(json);
+
+			// System.out.println("El json que enviamos es: ");
+			// System.out.println(json);
 
 			String response = encargadoPeticiones.postRequest(url, json);
 
-			//System.out.println("El json que recibimos es: ");
+			// System.out.println("El json que recibimos es: ");
 
-			//System.out.println(response); 
+			// System.out.println(response);
 
 			// Parseamos la respuesta y la convertimos en un JSONObject
-
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
 
-			if (respuesta == null) { 
+			if (respuesta == null) {
 				System.out.println("El json recibido no es correcto. Finaliza la ejecuciÛn");
-				System.exit(-1);
-				
+
 			} else { // El JSON recibido es correcto
 
 				// Sera "ok" si todo ha ido bien o "error" si hay algun problema
 				String stateJSON = (String) respuesta.get("state");
 				if (stateJSON.equals("ok")) {
+					state = true;
+					System.out.println("Almacenado " + up_username + " con los nuevos registros introducidos");
 
-					System.out.println("Almacenado "+up_username+" con los nuevos registros introducidos");
-
-				} else { // Hemos recibido el json pero en el estado se nos
-							// indica que ha habido alg˙n error
+				} else { // Hemos recibido el json pero en el estado nos
+							// indica que ha habido algun error
 
 					System.out.println("Acceso JSON REMOTO - Error al almacenar los datos");
 					System.out.println("Error: " + (String) respuesta.get("error"));
@@ -209,7 +204,7 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 
 			String json = objRequest.toJSONString();
 
-			//peticion para borrar usuaerio
+			// peticion para borrar usuaerio
 			String url = SERVER_PATH + SET_delete_USUARIO;
 
 			String response = encargadoPeticiones.postRequest(url, json);
@@ -218,16 +213,16 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
 
 			if (respuesta == null) {
-
 				System.out.println("El json recibido no es correcto. Finaliza la ejecuciÛn");
 				state = false;
+
 			} else { // El JSON recibido es correcto
 
 				// Sera "ok" si todo ha ido bien o "error" si hay algun problema
 				String stateJSON = (String) respuesta.get("state");
 				if (stateJSON.equals("ok")) {
 
-					System.out.println(del_username+" Borrado correctamente");
+					System.out.println(del_username + " Borrado correctamente");
 					state = true;
 				} else {
 					// error

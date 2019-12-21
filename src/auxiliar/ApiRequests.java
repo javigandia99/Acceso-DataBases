@@ -1,4 +1,4 @@
-package Auxiliares;
+package auxiliar;
 
 import com.squareup.okhttp.*;
 import java.io.IOException;

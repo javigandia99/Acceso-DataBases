@@ -2,7 +2,7 @@ package inferface;
 
 import java.util.HashMap;
 
-import Model.Users;
+import model.Users;
 
 public interface I_Acceso_A_Datos {
 
