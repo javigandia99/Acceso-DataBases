@@ -18,7 +18,7 @@ public class View {
 	public String typeAccess() {
 		String type = null;
 		System.out.println("Tipo de base de datos quiere utlizar: "
-				+ " (1 => SQL) (2 => File) (3 => Hibernate) (4 => Mongo) (5 => PHP-JSON) ");
+				+ " (1 => SQL) (2 => File) (3 => Hibernate) (4 => Mongo) (5 => PHP-JSON) (6 => NodeJS Api)");
 		int option = sc.nextInt();
 		switch (option) {
 		case 1:
@@ -39,6 +39,9 @@ public class View {
 
 		case 5:
 			type = "PHP";
+			break;
+		case 6:
+			type = "NodeJS";
 			break;
 		}
 

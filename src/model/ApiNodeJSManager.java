@@ -13,27 +13,27 @@ import org.json.simple.JSONValue;
 import auxiliar.ApiRequests;
 import inferface.I_Acceso_A_Datos;
 
-public class PHPJSONManager implements I_Acceso_A_Datos {
+public class ApiNodeJSManager implements I_Acceso_A_Datos {
 
 	ApiRequests encargadoPeticiones;
 	private String SERVER_PATH, GET, SET_insert_USUARIO, SET_delete_USUARIO, SET_deleteAll_USUARIOS;
-	HashMap<Integer, Users> listphp;
+	HashMap<Integer, Users> listapi;
 	int count;
 	JSONObject objUser;
 	JSONObject objRequest;
 	URL url;
 
-	public PHPJSONManager() {
-		listphp = new HashMap<Integer, Users>();
+	public ApiNodeJSManager() {
+		listapi = new HashMap<Integer, Users>();
 		encargadoPeticiones = new ApiRequests();
-		SERVER_PATH = "http://localhost/cliente_servidor/AccesoBaseDatos_PHPJSON/Server/";
+		SERVER_PATH = "http://127.0.0.1:8081/";
 
 	}
 
 	@Override
 	public HashMap<Integer, Users> leer() {
 
-		GET = "readUsers.php";
+		GET = "api/users";
 
 		try {
 
@@ -58,7 +58,7 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 
 				Users usu = new Users(db_username, db_password, db_description);
 
-				listphp.put(count, usu);
+				listapi.put(count, usu);
 
 			}
 			count = 0;
@@ -66,19 +66,19 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 			e.printStackTrace();
 		}
 
-		return listphp;
+		return listapi;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean insertusu(Users usu) {
 		boolean state = false;
-		SET_insert_USUARIO = "addUser.php";
+		SET_insert_USUARIO = "api/users";
 
 		objUser = new JSONObject();
 		objRequest = new JSONObject();
 		try {
-			listphp.put(count++, usu);
+			listapi.put(count++, usu);
 			objUser.put("username", usu.getUsername());
 			objUser.put("password", usu.getPassword());
 			objUser.put("description", usu.getDescription());
@@ -133,7 +133,7 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 	@Override
 	public boolean update(String up_username, String newPassword, String newDescription) {
 		boolean state = false;
-		SET_insert_USUARIO = "updateuser.php";
+		SET_insert_USUARIO = "api/users/"+up_username;
 		objUser = new JSONObject();
 		objRequest = new JSONObject();
 		try {
@@ -150,7 +150,7 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 			// System.out.println("El json que enviamos es: ");
 			// System.out.println(json);
 
-			String response = encargadoPeticiones.postRequest(url, json);
+			String response = encargadoPeticiones.putRequest(url, json);
 
 			// System.out.println("El json que recibimos es: ");
 
@@ -190,13 +190,13 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 	@Override
 	public boolean deleteone(String del_username) {
 		boolean state = false;
-		SET_delete_USUARIO = "deleteUser.php";
+		SET_delete_USUARIO = "api/users/"+del_username;
 		objUser = new JSONObject();
 		objRequest = new JSONObject();
 		try {
 			objUser.put("username", del_username);
 
-			listphp.remove(del_username);
+			listapi.remove(del_username);
 
 			objRequest.put("request", "del");
 			objRequest.put("userDel", objUser);
@@ -206,7 +206,7 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 			// peticion para borrar usuaerio
 			String url = SERVER_PATH + SET_delete_USUARIO;
 
-			String response = encargadoPeticiones.postRequest(url, json);
+			String response = encargadoPeticiones.deleteRequest(url, json);
 
 			// Parseamos la respuesta y la convertimos en un JSONObject
 			JSONObject respuesta = (JSONObject) JSONValue.parse(response.toString());
@@ -244,7 +244,7 @@ public class PHPJSONManager implements I_Acceso_A_Datos {
 		boolean state = false;
 		if (option.equalsIgnoreCase("si")) {
 
-			SET_deleteAll_USUARIOS = "deleteAllUsers.php";
+			SET_deleteAll_USUARIOS = "api/users";
 
 			try {
 				url = new URL(SERVER_PATH + SET_deleteAll_USUARIOS);

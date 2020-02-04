@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import inferface.I_Acceso_A_Datos;
+import model.ApiNodeJSManager;
 import model.BDManager;
 import model.FileManager;
 import model.HibernateManager;
@@ -99,6 +100,9 @@ public class Controller {
 		case "PHP":
 			typeAccess = new PHPJSONManager();
 			break;
+		case "NodeJS":
+			typeAccess = new ApiNodeJSManager();
+			break;
 		}
 		changeList = typeAccess.leer();
 		return changeList;
@@ -124,6 +128,9 @@ public class Controller {
 			break;
 		case "PHP":
 			access = new PHPJSONManager();
+			break;
+		case "NodeJS":
+			access = new ApiNodeJSManager();
 			break;
 		}
 
