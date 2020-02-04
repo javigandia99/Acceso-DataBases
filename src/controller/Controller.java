@@ -75,7 +75,7 @@ public class Controller {
 
 	public String deleteAll() {
 		String choose = null;
-		System.out.println("¿Seguro que quiere borrar todo?: ('si') - ('no')");
+		System.out.println("ï¿½Seguro que quiere borrar todo?: ('si') - ('no')");
 		choose = sc.nextLine();
 		return choose;
 	}

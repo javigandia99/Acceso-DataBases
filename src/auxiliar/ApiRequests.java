@@ -98,4 +98,19 @@ public class ApiRequests {
 
 		return response.body().string();
 	}
+	
+	/**
+	 * Metodo usado para hacer peticiones DELETE.
+	 * 
+	 * @param url URL a la que realizar la peticion.
+	 * @return Cuerpo de la respuesta.
+	 * @throws IOException
+	 */
+	public String deleteAllRequest(String url) throws IOException {
+		Request request = new Request.Builder().url(url).delete().build();
+
+		Response response = client.newCall(request).execute();
+
+		return response.body().string();
+	}
 }
